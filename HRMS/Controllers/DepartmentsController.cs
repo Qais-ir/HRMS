@@ -17,10 +17,10 @@ namespace HRMS.Controllers
         };
 
         [HttpGet("GetByCriteria")]
-        public IActionResult GetByCriteria(string? name)
+        public IActionResult GetByCriteria()
         {
             var result = from department in departments
-                         where (name == null || department.Name == name)
+                        // where (name == null || department.Name == name)
                          orderby department.Id descending
                          select new DepartmentDto
                          {
