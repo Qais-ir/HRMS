@@ -28,7 +28,7 @@ namespace HRMS.Controllers
                              Id = department.Id,
                              Name = department.Name,
                              Description = department.Description,
-                             FloorNumber = department.FloorNumber,
+                             FloorNumber = department.FloorNumber
                          };
             return Ok(result);
         }
