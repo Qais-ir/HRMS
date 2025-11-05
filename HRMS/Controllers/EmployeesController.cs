@@ -34,15 +34,18 @@ namespace HRMS.Controllers
         {
             var result = from employee in _dbContext.Employees
                          from department in _dbContext.Departments.Where(x => x.Id == employee.DepartmentId).DefaultIfEmpty() // Left Join
-                         from manager in _dbContext.Employees.Where(x => x.Id == employee.ManagerId).DefaultIfEmpty() // Left Join                       
-                         where (employeeDto.Position == null || employee.Position.ToUpper().Contains(employeeDto.Position.ToUpper())) && 
+                         from manager in _dbContext.Employees.Where(x => x.Id == employee.ManagerId).DefaultIfEmpty() // Left Join
+                         from lookup in _dbContext.Lookups.Where(x => x.Id == employee.PositionId)                                                                                            
+                         where 
+                         (employeeDto.PositionId == null || employee.PositionId == employeeDto.PositionId) && 
                          (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper()))
                          orderby employee.Id descending
                          select new EmployeeDto
                          {
                              Id = employee.Id,
                              Name = employee.FirstName + " " + employee.LastName,
-                             Position = employee.Position,
+                             PositionId = employee.PositionId,
+                             PositionName = lookup.Name,
                              BirthDate = employee.BirthDate,
                              Email = employee.Email,
                              Salary = employee.Salary,
@@ -70,14 +73,15 @@ namespace HRMS.Controllers
             {
                 Id = x.Id,
                 Name = x.FirstName + " " + x.LastName,
-                Position = x.Position,
+                PositionId = x.PositionId,
+                PositionName = x.Lookup.Name,
                 BirthDate = x.BirthDate,
                 Email = x.Email,
                 Salary = x.Salary,
                 DepartmentId = x.DepartmentId,
-                DepartmentName = "",
+                DepartmentName = x.Department.Name,
                 ManagerId = x.ManagerId,
-                ManagerName = ""
+                ManagerName = x.Manager.FirstName
             }).FirstOrDefault(x => x.Id == id);
 
             if(result == null)
@@ -98,7 +102,7 @@ namespace HRMS.Controllers
                 LastName = employeeDto.LastName,
                 Email = employeeDto.Email,
                 BirthDate = employeeDto.BirthDate,
-                Position = employeeDto.Position,
+                PositionId = employeeDto.PositionId,
                 Salary = employeeDto.Salary,
                 DepartmentId = employeeDto.DepartmentId,
                 ManagerId = employeeDto.ManagerId
@@ -123,7 +127,7 @@ namespace HRMS.Controllers
             employee.LastName = employeeDto.LastName;
             employee.Email = employeeDto.Email;
             employee.BirthDate = employeeDto.BirthDate;
-            employee.Position = employeeDto.Position;
+            employee.PositionId = employeeDto.PositionId;
             employee.Salary = employeeDto.Salary;
             employee.DepartmentId = employeeDto.DepartmentId;
             employee.ManagerId = employeeDto.ManagerId;
