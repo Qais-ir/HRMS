@@ -30,11 +30,21 @@ namespace HRMS.DbContexts
                     new Lookup { Id = 8, MajorCode = 1, MinorCode = 3, Name = "Technical" }
 
                 );
+
+            // Username is Unique
+            modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
+
+            // Seeding Database
+            // BCrypt.Net.BCrypt.HashPassword("Admin@123") = $2a$11$FodwrXysOiJ9lFlf1PZGZOQZH1fvBzBivVnSewumv5QTqlDIXh1/e
+            modelBuilder.Entity<User>().HasData(
+                new User { Id = 1, Username = "Admin", IsAdmin = true, HashedPassword = "$2a$11$FodwrXysOiJ9lFlf1PZGZOQZH1fvBzBivVnSewumv5QTqlDIXh1/e" }
+                );
         }
 
         // Tables
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Lookup> Lookups { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }
