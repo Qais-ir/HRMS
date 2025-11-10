@@ -1,8 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HRMS.Models
 {
+   // [Index(nameof(UserId), IsUnique = true)]
     public class Employee
     {
         [Key]
@@ -28,5 +30,9 @@ namespace HRMS.Models
         [ForeignKey("Lookup")]
         public long PositionId { get; set; }
         public Lookup Lookup { get; set; } // Navigation Property
+
+        [ForeignKey("User")]
+        public long? UserId { get; set; }
+        public User? User { get; set; } // Navigation Property
     }
 }

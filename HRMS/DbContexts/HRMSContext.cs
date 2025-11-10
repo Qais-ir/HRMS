@@ -34,6 +34,9 @@ namespace HRMS.DbContexts
             // Username is Unique
             modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
 
+            // UserId Unique
+            modelBuilder.Entity<Employee>().HasIndex(x => x.UserId).IsUnique();
+
             // Seeding Database
             // BCrypt.Net.BCrypt.HashPassword("Admin@123") = $2a$11$FodwrXysOiJ9lFlf1PZGZOQZH1fvBzBivVnSewumv5QTqlDIXh1/e
             modelBuilder.Entity<User>().HasData(
