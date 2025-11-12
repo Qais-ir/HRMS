@@ -4,9 +4,11 @@ using HRMS.Models;
 using HRMS.Dtos.Employees;
 using HRMS.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HRMS.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]// Data Annotation
     [ApiController]// Data Annotation
     public class EmployeesController : ControllerBase
@@ -116,7 +118,6 @@ namespace HRMS.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
         [HttpPost("Add")] // Create
         public IActionResult Add([FromBody] SaveEmployeeDto employeeDto)
         {
