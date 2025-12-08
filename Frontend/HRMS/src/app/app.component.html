@@ -1,0 +1,44 @@
+<!-- <div class="welcome">
+  Title : {{title}}
+</div>
+<div class="welcome">
+  Number : {{number}}
+</div>
+<div class="welcome">
+  Boolean : {{boolean}}
+</div>
+<div class="welcome">
+  Array : {{arr}}
+</div> -->
+
+<!-- Directives -->
+<!-- <h3>Before Angular 17</h3>
+<div *ngFor="let student of students; index as i">
+  <span style="margin-right: 5px;">{{i + 1}}.</span>
+  <span style="margin-right: 5px;" [ngClass]='{"passed": student.mark >= 50, "faild": student.mark < 50}'>{{student.name}}</span>
+  <span style="margin-right: 5px;" [ngStyle]="{'color': student.mark >= 50 ? 'green' : 'red'}" >{{student.mark}}%</span>
+  <span *ngIf="student.mark >= 50">Passed</span>
+  <span *ngIf="student.mark < 50">Faild</span>
+</div> -->
+
+
+<!-- Template Syntax --> 
+<!-- Control Flow Syntax -->
+ <h3>After Angular 17</h3>
+@for(student of students; track student.id; let i = $index){
+  <div appRandomColor>
+    <!-- [class]="student.mark >= 50 ? 'passed' : 'faild'" -->
+    <!-- [style.color]="student.mark >= 50 ? 'green' : 'red'" -->
+    <span style="margin-right: 5px;">{{i + 1}}.</span>
+    <span style="margin-right: 5px;" [class.passed]="student.mark >= 50" [class.faild]="student.mark < 50" >{{student.name}}</span>
+    <span style="margin-right: 5px;" [style]="{'color': student.mark >= 50 ? 'green' : 'red'}">{{student.mark}}%</span>
+    @if(student.mark >= 50){
+      <span>Passed</span>
+    }
+    @else{
+      <span>Faild</span>
+    }
+
+  </div>
+} 
+
