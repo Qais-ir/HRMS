@@ -5,12 +5,12 @@ export interface Employee{
   positionId ?: number;
   positionName ?: string;
   status ?: boolean;
-  birthDate ?: Date;
+  birthdate ?: Date;
   email ?: string;
   salary ?: number;
   departmentId ?: number;
   departmentName ?: string;
-  managerId ?: number;
-  managerName ?: string;
+  managerId ?: number | null; // Number | Undefined ?? null
+  managerName ?: string | null;
   userId ?: number;
 }

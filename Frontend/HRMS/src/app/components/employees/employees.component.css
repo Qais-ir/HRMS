@@ -4,3 +4,11 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.align-end{
+    align-items: end;
+}
+
+.invalid-form{
+    border-color: red;
+}
