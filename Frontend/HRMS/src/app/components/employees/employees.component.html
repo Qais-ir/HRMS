@@ -69,7 +69,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for(emp of employees | paginate: paginationConfig; track emp.id; let i = $index){
+                    @for(emp of employees | paginate: paginationConfig; track
+                    emp.id; let i = $index){
                     <tr>
                         <td>{{i + 1}}</td>
                         <td>{{emp.name}}</td>
@@ -87,11 +88,22 @@
                         <td>{{emp.salary | currency:'USD'}}</td>
                         <td>{{emp.departmentName}}</td>
                         <td>{{emp.managerName}}</td>
+                        <td>
+                            <button type="button" (click)="loadEmployeeForm(emp.id)"
+                                class="btn btn-outline-success"  data-bs-toggle="modal" data-bs-target="#saveEmployeeModal">
+                                <i class="bi bi-pencil-fill"></i>
+                            </button>
+
+                            <button type="button"class="btn btn-outline-danger ms-2 me-2" (click)="removeEmployee(emp.id)" >
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </td>
                     </tr>
                     }
                 </tbody>
             </table>
-            <pagination-controls (pageChange)="changePage($event)"></pagination-controls>
+            <pagination-controls class="text-end"
+                (pageChange)="changePage($event)"></pagination-controls>
         </div>
     </div>
 
@@ -149,7 +161,7 @@
                                 class="form-label">Department</label>
                             <select class="form-select" id="department"
                                 [class.invalid-form]="employeeForm.get('departmentId')?.invalid && employeeForm.get('departmentId')?.touched"
-                                 formControlName="departmentId">
+                                formControlName="departmentId">
                                 @for(item of departments; track item.id){
                                 <option [value]="item.id">{{item.name}}</option>
                                 }
@@ -160,8 +172,8 @@
                             <label for="position"
                                 class="form-label">Positions</label>
                             <select class="form-select" id="position"
-                             [class.invalid-form]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched"
-                            formControlName="positionId">
+                                [class.invalid-form]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched"
+                                formControlName="positionId">
                                 @for(item of positions; track item.id){
                                 <option [value]="item.id">{{item.name}}</option>
                                 }
@@ -171,7 +183,8 @@
                         <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                             <label for="manager"
                                 class="form-label">Manager</label>
-                            <select class="form-select" id="manager" formControlName="managerId">
+                            <select class="form-select" id="manager"
+                                formControlName="managerId">
                                 @for(item of managers; track item.id){
                                 <option [value]="item.id">{{item.name}}</option>
                                 }
@@ -182,7 +195,8 @@
 
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox"
-                                    role="switch" id="status" formControlName="status"
+                                    role="switch" id="status"
+                                    formControlName="status"
                                     checked>
                                 <label class="form-check-label"
                                     for="status">Status</label>
@@ -193,8 +207,11 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"
-                    data-bs-dismiss="modal" id="closeDialog" #closeDialog>Close</button>
-                <button type="button" class="btn btn-primary" [disabled]="this.employeeForm?.invalid" (click)="saveEmployee()">
+                    data-bs-dismiss="modal" id="closeDialog"
+                    #closeDialog>Close</button>
+                <button type="button" class="btn btn-primary"
+                    [disabled]="this.employeeForm?.invalid"
+                    (click)="saveEmployee()">
                     Save changes
                 </button>
             </div>
