@@ -4,9 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DatePipe } from '@angular/common';
+import { ConfirmationDialogComponent } from '../../shared-components/confirmation-dialog/confirmation-dialog.component';
 @Component({
   selector: 'app-employees',
-  imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule],
+  imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule, ConfirmationDialogComponent],
   providers: [DatePipe],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css'
@@ -18,6 +19,12 @@ export class EmployeesComponent {
   }
 
   @ViewChild ('closeDialog') closeDialog : ElementRef | undefined;
+
+  showConfirmDialog : boolean = false;
+  employeeToBeDeleted : number | undefined;
+
+  deleteDialogTitle : string = "Delete Confirmation";
+  deleteDialogContent : string = "Are you sure you want to delete this employee?";
 
   paginationConfig = {
     itemsPerPage: 5,
@@ -253,14 +260,26 @@ export class EmployeesComponent {
   }
 
 
-  removeEmployee(id : number | undefined){
-    if(!id){
-      return;
-    }
-   // this.employees = this.employees.filter(x => x.id != id); // Returns a new array without the deleted id
+  removeEmployee(){
 
-   let index = this.employees.findIndex(x => x.id == id); // Return Employee Index
+    //this.employees = this.employees.filter(x => x.id != id); // Returns a new array without the deleted id
+
+   let index = this.employees.findIndex(x => x.id == this.employeeToBeDeleted); // Return Employee Index
     this.employees.splice(index, 1); // Delete the employee with splice || where start from index and finish after just one index
   }
+
+  showConfimrationDialog(empId : number | undefined){
+    this.employeeToBeDeleted = empId; // Save Employee Id To Be Deleted Later
+    this.showConfirmDialog = true; // Show Confermiation Dialog
+  }
+
+  confirmEmployeeDelete(confirm : boolean){
+    if(confirm){
+      this.removeEmployee();
+    }
+    this.employeeToBeDeleted = undefined;
+    this.showConfirmDialog = false;
+  }
+
 }
 
