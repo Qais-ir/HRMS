@@ -49,7 +49,7 @@ namespace HRMS.Migrations
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
             modelBuilder.Entity("HRMS.Models.Employee", b =>
@@ -104,7 +104,7 @@ namespace HRMS.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("HRMS.Models.Lookup", b =>
@@ -127,7 +127,7 @@ namespace HRMS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Lookups");
+                    b.ToTable("Lookups", (string)null);
 
                     b.HasData(
                         new
@@ -212,7 +212,7 @@ namespace HRMS.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new

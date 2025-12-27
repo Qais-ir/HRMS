@@ -6,10 +6,11 @@ using HRMS.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using HRMS.Dtos.Shared;
 
 namespace HRMS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]// Data Annotation
     [ApiController]// Data Annotation
     public class EmployeesController : ControllerBase
@@ -69,7 +70,7 @@ namespace HRMS.Controllers
 
                 if(role?.ToUpper() != "ADMIN" && role?.ToUpper() != "HR")
                 {
-                    result = result.Where(x => x.UserId == long.Parse(userId));
+                   // result = result.Where(x => x.UserId == long.Parse(userId));
                 }
 
                 return Ok(result);
@@ -132,10 +133,10 @@ namespace HRMS.Controllers
 
                     if (role?.ToUpper() != "ADMIN" && role?.ToUpper() != "HR")
                     {
-                        if (result.UserId != long.Parse(userId))
-                        {
-                            return Forbid(); // 403
-                        }
+                        //if (result.UserId != long.Parse(userId))
+                        //{
+                        //    return Forbid(); // 403
+                        //}
                     }
 
                 return Ok(result);
@@ -146,7 +147,7 @@ namespace HRMS.Controllers
             }
         }
 
-        [Authorize(Roles = "HR,Admin")]
+        //[Authorize(Roles = "HR,Admin")]
         [HttpPost("Add")] // Create
         public IActionResult Add([FromBody] SaveEmployeeDto employeeDto)
         {
@@ -194,7 +195,7 @@ namespace HRMS.Controllers
             }
 
 }
-        [Authorize(Roles = "HR,Admin")]
+       // [Authorize(Roles = "HR,Admin")]
         [HttpPut("Update")] // Update
         public IActionResult Update([FromBody] SaveEmployeeDto employeeDto)
         {
@@ -228,7 +229,7 @@ namespace HRMS.Controllers
             
         }
 
-        [Authorize(Roles = "HR,Admin")]
+        //[Authorize(Roles = "HR,Admin")]
         [HttpDelete("Delete/{id}")] // Delete
         public IActionResult Delete(long id)
         {
@@ -246,6 +247,29 @@ namespace HRMS.Controllers
                             return Ok();
             }
             
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        [HttpGet("GetManagers")]
+        public IActionResult GetManagers()
+        {
+            try
+            {
+                var data = from emp in _dbContext.Employees
+                           from pos in _dbContext.Lookups.Where(x => x.Id == emp.PositionId)
+                           where pos.MajorCode == 0 && pos.MinorCode == 3
+                           select new ListDto
+                           {
+                               Id = emp.Id,
+                               Name = emp.FirstName + " " + emp.LastName
+                           };
+
+                return Ok(data);
+            }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);

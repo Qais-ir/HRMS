@@ -37,7 +37,7 @@
             </div>
 
             <div class="text-end">
-                <button type="button" class="btn btn-outline-secondary">
+                <button type="button" class="btn btn-outline-secondary" (click)="loadEmployees()">
                     <i class="bi bi-search"></i>
                     Search
                 </button>
@@ -51,7 +51,7 @@
                 <h5>Employees</h5>
             </div>
             <div>
-                <button type="button" class="btn btn-outline-secondary" (click)="resetForm()"
+                <button type="button" class="btn btn-outline-secondary" (click)="loadSaveDialog()"
                     data-bs-toggle="modal" data-bs-target="#saveEmployeeModal">
                     <i class="bi bi-person-add"></i>
                     Add Employee
@@ -123,12 +123,21 @@
                 <form [formGroup]="employeeForm">
                     <div class="row align-end">
                         <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
-                            <label for="name"
-                                class="form-label">Name</label>
+                            <label for="firstName"
+                                class="form-label">First Name</label>
                             <input type="text" class="form-control"
-                                [class.invalid-form]="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched"
-                                id="name" formControlName="name"
-                                placeholder="Employee Name">
+                                [class.invalid-form]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched"
+                                id="firstName" formControlName="firstName"
+                                placeholder="First Name">
+                        </div>
+
+                        <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                            <label for="lastName"
+                                class="form-label">Last Name</label>
+                            <input type="text" class="form-control"
+                                [class.invalid-form]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched"
+                                id="lastName" formControlName="lastName"
+                                placeholder="Last Name">
                         </div>
 
                         <div class="col-lg-4 col-md-4 col-sm-12 mb-2">

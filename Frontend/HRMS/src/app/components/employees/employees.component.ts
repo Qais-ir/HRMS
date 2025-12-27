@@ -5,6 +5,10 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DatePipe } from '@angular/common';
 import { ConfirmationDialogComponent } from '../../shared-components/confirmation-dialog/confirmation-dialog.component';
+import { EmployeesService } from '../../services/employees.service';
+import { List } from '../../interfaces/list';
+import { DepartmentsService } from '../../services/departments.service';
+import { LookupsService } from '../../services/lookups.service';
 @Component({
   selector: 'app-employees',
   imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule, ConfirmationDialogComponent],
@@ -14,7 +18,11 @@ import { ConfirmationDialogComponent } from '../../shared-components/confirmatio
 })
 export class EmployeesComponent {
 
-  constructor(private _datePipe : DatePipe){
+  constructor(private _datePipe : DatePipe,
+    private _employeesService : EmployeesService,
+    private _departmentsService : DepartmentsService,
+    private _lookupsService : LookupsService
+  ){
 
   }
 
@@ -31,105 +39,12 @@ export class EmployeesComponent {
     currentPage: 1
   };
 
-  employees : Employee[] = [
-    { id: 1, name: "Emp 1", birthdate: new Date(2000,1,1), email: 'Emp1@gmail.com', salary: 1000, status: false,
-      positionId: 1, positionName: 'Developer', departmentId: 1, departmentName: 'IT', userId: 1, 
-      managerId: null, managerName: null
-    },
-    { id: 2, name: "Emp 2", birthdate: new Date(1995,1,1), email: 'Emp2@gmail.com', salary: 1500, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 2, 
-      managerId: null, managerName: null
-    },
-    { id: 3, name: "Emp 3", birthdate: new Date(1998,5,2), email: 'Emp3@gmail.com', salary: 1800, status: true,
-      positionId: 1, positionName: 'Developer', departmentId: 1, departmentName: 'IT', userId: 3, 
-      managerId: null, managerName: null
-    },
-    { id: 4, name: "Emp 4", birthdate: new Date(1995,1,2), email: 'Emp4@gmail.com', salary: 1200, status: false,
-      positionId: 1, positionName: 'Developer', departmentId: 1, departmentName: 'IT', userId: 4, 
-      managerId: 3, managerName: "Emp 3"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-    { id: 5, name: "Emp 5", birthdate: new Date(2001,11,25), email: 'Emp5@gmail.com', salary: 800, status: true,
-      positionId: 2, positionName: 'HR', departmentId: 2, departmentName: 'HR', userId: 5, 
-      managerId: 2, managerName: "Emp 2"
-    },
-
-  ];
+  employees : Employee[] = [];
 
   employeeForm : FormGroup = new FormGroup({
     id: new FormControl(null),
-    name : new FormControl(null, [Validators.required]),
+    firstName : new FormControl(null, [Validators.required]),
+    lastName : new FormControl(null, [Validators.required]),
     birthdate : new FormControl(null),
     email : new FormControl(null),
     salary : new FormControl(null, [Validators.required]),
@@ -151,25 +66,107 @@ export class EmployeesComponent {
     "Manager"
   ];
 
-  departments = [
-    {id : null, name: "Select Department"},
-    {id : 1, name: "IT"},
-    {id : 2, name: "HR"}
-  ];
+  departments : List[] = [];
 
-  positions = [
-    {id : null, name: "Select Position"},
-    {id : 1, name : "Developer"},
-    {id : 2, name : "Hr"},
-    {id : 3, name : "Manager"}
-  ];
+  positions : List[] = [];
 
-  managers = [
-    {id : null, name: "Select Manager"},
-    {id : 1, name : "Emp 1"},
-    {id : 2, name : "Emp 2"}
-  ];
+  managers : List[] = [];
 
+  loadEmployees(){
+    this.employees = [];
+    this._employeesService.getByCriteria().subscribe({ // Notify
+      // Response
+
+      // Successful
+      next: (res : any) =>{
+        if(res.length > 0){
+          res.forEach((x : any) => {
+            let employee : Employee = {
+              id: x.id,
+              name: x.name,
+              birthdate: x.birthDate,
+              email: x.email,
+              salary: x.salary,
+              status : false,
+              positionId: x.positionId,
+              positionName: x.positionName,
+              departmentId: x.departmentId,
+              departmentName: x.departmentName,
+              managerId: x.managerId,
+              managerName: x.managerName,
+              userId: x.userId
+            };
+
+            this.employees.push(employee);
+          })
+        }
+      },
+      // Faild
+      error: err => {
+        console.log(err.error?.message ?? err?.message ?? "Http Response Error");
+      }
+    });
+
+  }
+
+  loadMangersList(){
+    this.managers = [
+      {id : null, name: "Select Manager"}
+    ];
+    this._employeesService.getManagers().subscribe({
+      next: (res : any) => {
+        if(res.length > 0){
+          res.forEach((x : any) => {
+            let manager : List = {id: x.id, name: x.name};
+            this.managers.push(manager);
+          })
+        }
+      },
+      error: err => {
+        console.log(err.error?.message ?? err?.message ?? "Http Response Error");        
+      }
+    })
+  }
+
+  loadDepartmentsList(){
+    this.departments = [
+      {id : null, name : "Select Department"}
+    ];
+
+    this._departmentsService.getDepartmentsList().subscribe({
+      next : (res : any) => {
+        if(res.length > 0){
+          res.forEach((x : any) => {
+            let department : List = {id : x.id, name : x.name};
+            this.departments.push(department);
+          })
+        }
+      },
+      error : err => {
+        console.log(err.error?.message ?? err?.message ?? "Http Response Error");          
+      }
+    })
+  }
+
+  loadPositionsList(){
+    this.positions = [
+      {id: null, name : "Select Position"}
+    ];
+
+    this._lookupsService.getByMajorCode(0).subscribe({
+      next: (res : any) => {
+        if(res.length > 0){
+          res.forEach((x : any) => {
+            let position : List = {id : x.id, name : x.name};
+            this.positions.push(position);
+          })
+        }
+      },
+      error : err => {
+        console.log(err.error?.message ?? err?.message ?? "Http Response Error");         
+      }
+    })
+  }
 
 
   saveEmployee(){
@@ -177,22 +174,26 @@ export class EmployeesComponent {
     if(!this.employeeForm.value.id){ // Add Employee
 
         let newEmp : Employee = {
-          id: (this.employees[this.employees.length - 1]?.id ?? 0) + 1,
-          name: this.employeeForm.value.name,
+          id: 0,
+          firstName: this.employeeForm.value.firstName,
+          lastName: this.employeeForm.value.lastName,
           email: this.employeeForm.value.email,
           birthdate: this.employeeForm.value.birthdate,
           salary: this.employeeForm.value.salary,
           status: this.employeeForm.value.status,
-          userId: (this.employees[this.employees.length - 1]?.userId ?? 0) + 1,
           departmentId: this.employeeForm.value.departmentId,
-          departmentName: this.departments.find(x => x.id == this.employeeForm.value.departmentId)?.name,
           managerId: this.employeeForm.value.managerId,
-          managerName: this.managers.find(x => x.id == this.employeeForm.value.managerId)?.name,
           positionId: this.employeeForm.value.positionId,
-          positionName: this.positions.find(x => x.id == this.employeeForm.value.positionId)?.name,
         };
 
-        this.employees.push(newEmp);
+        this._employeesService.add(newEmp).subscribe({
+          next : (res : any)=>{
+              this.loadEmployees();
+          },
+          error : err => {
+            console.log(err.error?.message ?? err?.message ?? "Http Response Error");                 
+          }
+        })
     }
     else{ // Edit Employee
 
@@ -218,6 +219,14 @@ export class EmployeesComponent {
     this.closeDialog?.nativeElement.click();
    // document.getElementById('closrDialog')?.click();
   }
+
+  loadSaveDialog(){
+    this.resetForm();
+    this.loadMangersList();
+    this.loadDepartmentsList();
+    this.loadPositionsList();
+  }
+
 
   resetForm(){
     this.employeeForm.reset({
