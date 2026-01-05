@@ -50,7 +50,8 @@ namespace HRMS.Controllers
                              from lookup in _dbContext.Lookups.Where(x => x.Id == employee.PositionId)
                              where
                              (employeeDto.PositionId == null || employee.PositionId == employeeDto.PositionId) &&
-                             (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper()))
+                             (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper())) &&
+                             (employeeDto.Status == null || employee.Status == employeeDto.Status)
                              orderby employee.Id descending
                              select new EmployeeDto
                              {
@@ -65,7 +66,8 @@ namespace HRMS.Controllers
                                  DepartmentName = department.Name,
                                  ManagerId = employee.ManagerId,
                                  ManagerName = manager.FirstName,
-                                 UserId = employee.UserId
+                                 UserId = employee.UserId,
+                                 Status = employee.Status
                              };
 
                 if(role?.ToUpper() != "ADMIN" && role?.ToUpper() != "HR")
@@ -102,6 +104,8 @@ namespace HRMS.Controllers
                     {
                         Id = x.Id,
                         Name = x.FirstName + " " + x.LastName,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
                         PositionId = x.PositionId,
                         PositionName = x.Lookup.Name,
                         BirthDate = x.BirthDate,
@@ -111,7 +115,8 @@ namespace HRMS.Controllers
                         DepartmentName = x.Department.Name,
                         ManagerId = x.ManagerId,
                         ManagerName = x.Manager.FirstName,
-                        UserId = x.UserId
+                        UserId = x.UserId,
+                        Status = x.Status
                     }).FirstOrDefault(x => x.Id == id);
 
 
@@ -181,8 +186,9 @@ namespace HRMS.Controllers
                                 DepartmentId = employeeDto.DepartmentId,
                                 ManagerId = employeeDto.ManagerId,
                                 //UserId = user.Id
-                                User = user
-                };
+                                User = user,
+                                Status = employeeDto.Status
+                            };
                  _dbContext.Employees.Add(employee);
 
                  _dbContext.SaveChanges(); // Commit
@@ -218,6 +224,7 @@ namespace HRMS.Controllers
                 employee.Salary = employeeDto.Salary;
                 employee.DepartmentId = employeeDto.DepartmentId;
                 employee.ManagerId = employeeDto.ManagerId;
+                employee.Status = employeeDto.Status;
                 _dbContext.SaveChanges();
 
                 return Ok();
@@ -242,9 +249,15 @@ namespace HRMS.Controllers
                                 return NotFound("Employee Does Not Exist"); // 404
                             }
 
-                            _dbContext.Employees.Remove(employee);
-                            _dbContext.SaveChanges();
-                            return Ok();
+                var employeeManager = _dbContext.Employees.Any(x => x.ManagerId == id);
+                if (employeeManager)
+                {
+                    return BadRequest(new Exception("Managers with assigned employees can not be deleted."));
+                }
+
+                _dbContext.Employees.Remove(employee);
+                _dbContext.SaveChanges();
+                 return Ok();
             }
             
             catch (Exception ex)

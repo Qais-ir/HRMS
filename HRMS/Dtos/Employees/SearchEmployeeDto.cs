@@ -4,5 +4,6 @@
     {
         public string? Name { get; set; }
         public long? PositionId { get; set; }
+        public bool? Status { get; set; }
     }
 }

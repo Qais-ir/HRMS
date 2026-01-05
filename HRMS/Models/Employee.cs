@@ -34,5 +34,7 @@ namespace HRMS.Models
         [ForeignKey("User")]
         public long? UserId { get; set; }
         public User? User { get; set; } // Navigation Property
+
+        public bool Status { get; set; }
     }
 }

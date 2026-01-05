@@ -11,5 +11,6 @@
         public decimal Salary { get; set; }
         public long? DepartmentId { get; set; }
         public long? ManagerId { get; set; }
+        public bool Status { get; set; }
     }
 }

@@ -23,7 +23,7 @@ export class EmployeesComponent {
     private _departmentsService : DepartmentsService,
     private _lookupsService : LookupsService
   ){
-
+    this.loadPositionsList();
   }
 
   @ViewChild ('closeDialog') closeDialog : ElementRef | undefined;
@@ -54,6 +54,12 @@ export class EmployeesComponent {
     managerId : new FormControl(null),
   });
 
+  searchFilterForm : FormGroup = new FormGroup({
+    name : new FormControl(null),
+    positionId : new FormControl(null),
+    status : new FormControl(null)
+  })
+
   employeesTableColumns : string[] = [
     "#",
     "Name",
@@ -72,9 +78,22 @@ export class EmployeesComponent {
 
   managers : List[] = [];
 
+  statusList = [
+    {value : null, name: "Select Status"},
+    {value : true, name: "Active"},
+    {value : false, name: "Inactive"}
+  ]
+
   loadEmployees(){
     this.employees = [];
-    this._employeesService.getByCriteria().subscribe({ // Notify
+
+    let searchObj = {
+      name : this.searchFilterForm.value.name,
+      positionId : this.searchFilterForm.value.positionId,
+      status : this.searchFilterForm.value.status,
+    }
+
+    this._employeesService.getByCriteria(searchObj).subscribe({ // Notify
       // Response
 
       // Successful
@@ -87,7 +106,7 @@ export class EmployeesComponent {
               birthdate: x.birthDate,
               email: x.email,
               salary: x.salary,
-              status : false,
+              status : x.status,
               positionId: x.positionId,
               positionName: x.positionName,
               departmentId: x.departmentId,
@@ -123,7 +142,7 @@ export class EmployeesComponent {
         }
       },
       error: err => {
-        console.log(err.error?.message ?? err?.message ?? "Http Response Error");        
+        console.log(err.error?.message ?? err?.error ?? "Http Response Error");        
       }
     })
   }
@@ -143,7 +162,7 @@ export class EmployeesComponent {
         }
       },
       error : err => {
-        console.log(err.error?.message ?? err?.message ?? "Http Response Error");          
+        console.log(err.error?.message ?? err?.error ?? "Http Response Error");          
       }
     })
   }
@@ -163,7 +182,7 @@ export class EmployeesComponent {
         }
       },
       error : err => {
-        console.log(err.error?.message ?? err?.message ?? "Http Response Error");         
+        console.log(err.error?.message ?? err?.error ?? "Http Response Error");         
       }
     })
   }
@@ -171,10 +190,8 @@ export class EmployeesComponent {
 
   saveEmployee(){
 
-    if(!this.employeeForm.value.id){ // Add Employee
-
-        let newEmp : Employee = {
-          id: 0,
+      let newEmp : Employee = {
+          id: this.employeeForm.value.id ?? 0,
           firstName: this.employeeForm.value.firstName,
           lastName: this.employeeForm.value.lastName,
           email: this.employeeForm.value.email,
@@ -184,35 +201,28 @@ export class EmployeesComponent {
           departmentId: this.employeeForm.value.departmentId,
           managerId: this.employeeForm.value.managerId,
           positionId: this.employeeForm.value.positionId,
-        };
+      };
+
+    if(!this.employeeForm.value.id){ // Add Employee
 
         this._employeesService.add(newEmp).subscribe({
           next : (res : any)=>{
               this.loadEmployees();
           },
           error : err => {
-            console.log(err.error?.message ?? err?.message ?? "Http Response Error");                 
+            console.log(err.error?.message ?? err?.error ?? "Http Response Error");                 
           }
         })
     }
     else{ // Edit Employee
-
-      let index = this.employees.findIndex(x => x.id == this.employeeForm.value.id); // Returns The Index.
-
-      this.employees[index].name = this.employeeForm.value.name;
-      this.employees[index].birthdate = this.employeeForm.value.birthdate;
-      this.employees[index].email = this.employeeForm.value.email;
-      this.employees[index].salary = this.employeeForm.value.salary;
-      this.employees[index].status = this.employeeForm.value.status;
-      
-      this.employees[index].positionId = this.employeeForm.value.positionId;
-      this.employees[index].positionName = this.positions.find(x => x.id == this.employeeForm.value.positionId)?.name;
-
-      this.employees[index].departmentId = this.employeeForm.value.departmentId;
-      this.employees[index].departmentName = this.departments.find(x => x.id == this.employeeForm.value.departmentId)?.name;
-
-      this.employees[index].managerId = this.employeeForm.value.managerId;
-      this.employees[index].managerName = this.managers.find(x => x.id == this.employeeForm.value.managerId)?.name;
+      this._employeesService.update(newEmp).subscribe({
+        next : (res : any) => {
+          this.loadEmployees();
+        },
+        error : err => {
+          console.log(err.error?.message ?? err?.error ?? "Http Response Error");   
+        }
+      })
 
     }
   
@@ -239,33 +249,34 @@ export class EmployeesComponent {
   }
 
   loadEmployeeForm(id : number | undefined){
-
+    this.loadSaveDialog();
     if(!id){
       return;
     }
 
-    let employee = this.employees.find(x => x.id == id);
+    this._employeesService.getById(id).subscribe({
+      next: (employee : any) => {
+        if(employee != null){
+          this.employeeForm.patchValue({
+            id : employee.id,
+            firstName : employee.firstName,
+            lastName : employee.lastName,
+            email : employee.email,
+            birthdate : this._datePipe.transform(employee.birthDate, 'yyyy-MM-dd'),
+            salary : employee.salary,
+            status : employee.status,
+            positionId : employee.positionId,
+            departmentId : employee.departmentId,
+            managerId : employee.managerId
+          });
+        }
+      },
+      error: err =>{
+        console.log(err.error?.message ?? err?.error ?? "Http Response Error");    
+      }
+    })
 
 
-    // null == undeifned  --> true
-    // null === undefined --> false
-
-    // undefined != null --> false
-    // undefined !== null --> true
-    if(employee != null){
-
-      this.employeeForm.patchValue({
-        id : employee.id,
-        name : employee.name,
-        email : employee.email,
-        birthdate : this._datePipe.transform(employee.birthdate, 'yyyy-MM-dd'),
-        salary : employee.salary,
-        status : employee.status,
-        positionId : employee.positionId,
-        departmentId : employee.departmentId,
-        managerId : employee.managerId
-      })
-    }
   }
 
 
@@ -273,8 +284,19 @@ export class EmployeesComponent {
 
     //this.employees = this.employees.filter(x => x.id != id); // Returns a new array without the deleted id
 
-   let index = this.employees.findIndex(x => x.id == this.employeeToBeDeleted); // Return Employee Index
-    this.employees.splice(index, 1); // Delete the employee with splice || where start from index and finish after just one index
+   //let index = this.employees.findIndex(x => x.id == this.employeeToBeDeleted); // Return Employee Index
+    //this.employees.splice(index, 1); // Delete the employee with splice || where start from index and finish after just one index
+  
+    if(this.employeeToBeDeleted){
+      this._employeesService.delete(this.employeeToBeDeleted).subscribe({
+        next : (res : any) => {
+          this.loadEmployees();
+        },
+        error : err => {
+          alert(err.error?.message ?? err?.error ?? "Http Response Error");    
+        }
+      })
+    }
   }
 
   showConfimrationDialog(empId : number | undefined){

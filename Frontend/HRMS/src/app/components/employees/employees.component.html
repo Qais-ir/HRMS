@@ -9,35 +9,44 @@
             </h5>
         </div>
         <div class="card-body">
-            <div class="row mb-2">
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <label for="employeeName"
-                        class="form-label">Employee Name</label>
-                    <input type="text" class="form-control"
-                        id="employeeName"
-                        placeholder="Employee Name">
-                </div>
+            <div [formGroup]="searchFilterForm">
+                <div class="row mb-2">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label for="employeeName"
+                            class="form-label">Employee Name</label>
+                        <input type="text" class="form-control"
+                            id="employeeName" formControlName="name"
+                            placeholder="Employee Name">
+                    </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <label for="position"
-                        class="form-label">Position</label>
-                    <input type="text" class="form-control"
-                        id="position"
-                        placeholder="Position">
-                </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label for="position"
+                            class="form-label">Position</label>
+                            <select class="form-select" id="position"
+                                formControlName="positionId">
+                                @for(item of positions; track item.id){
+                                    <option [ngValue]="item.id">{{item.name}}</option>
+                                }
+                            </select>
+                    </div>
 
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <label for="status"
-                        class="form-label">Status</label>
-                    <input type="text" class="form-control"
-                        id="status"
-                        placeholder="Status">
-                </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <label for="status"
+                            class="form-label">Status</label>
+                            <select class="form-select" id="status"
+                                formControlName="status">
+                                @for(item of statusList; track item.value){
+                                    <option [ngValue]="item.value">{{item.name}}</option>
+                                }
+                            </select>
+                    </div>
 
+                </div>
             </div>
 
             <div class="text-end">
-                <button type="button" class="btn btn-outline-secondary" (click)="loadEmployees()">
+                <button type="button" class="btn btn-outline-secondary"
+                    (click)="loadEmployees()">
                     <i class="bi bi-search"></i>
                     Search
                 </button>
@@ -51,7 +60,8 @@
                 <h5>Employees</h5>
             </div>
             <div>
-                <button type="button" class="btn btn-outline-secondary" (click)="loadSaveDialog()"
+                <button type="button" class="btn btn-outline-secondary"
+                    (click)="loadSaveDialog()"
                     data-bs-toggle="modal" data-bs-target="#saveEmployeeModal">
                     <i class="bi bi-person-add"></i>
                     Add Employee
@@ -89,12 +99,17 @@
                         <td>{{emp.departmentName}}</td>
                         <td>{{emp.managerName}}</td>
                         <td>
-                            <button type="button" (click)="loadEmployeeForm(emp.id)"
-                                class="btn btn-outline-success"  data-bs-toggle="modal" data-bs-target="#saveEmployeeModal">
+                            <button type="button"
+                                (click)="loadEmployeeForm(emp.id)"
+                                class="btn btn-outline-success"
+                                data-bs-toggle="modal"
+                                data-bs-target="#saveEmployeeModal">
                                 <i class="bi bi-pencil-fill"></i>
                             </button>
 
-                            <button type="button"class="btn btn-outline-danger ms-2 me-2" (click)="showConfimrationDialog(emp.id)" >
+                            <button type="button"
+                                class="btn btn-outline-danger ms-2 me-2"
+                                (click)="showConfimrationDialog(emp.id)">
                                 <i class="bi bi-trash-fill"></i>
                             </button>
                         </td>
@@ -229,6 +244,7 @@
 </div>
 
 @if(showConfirmDialog){
-    <app-confirmation-dialog [title]="deleteDialogTitle"
-    [content]="deleteDialogContent" (confirm)="confirmEmployeeDelete($event)"></app-confirmation-dialog>
+<app-confirmation-dialog [title]="deleteDialogTitle"
+    [content]="deleteDialogContent"
+    (confirm)="confirmEmployeeDelete($event)"></app-confirmation-dialog>
 }
