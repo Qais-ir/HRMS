@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Employee } from '../../interfaces/employee';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,13 +16,19 @@ import { LookupsService } from '../../services/lookups.service';
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css'
 })
-export class EmployeesComponent {
+export class EmployeesComponent  {
 
   constructor(private _datePipe : DatePipe,
     private _employeesService : EmployeesService,
     private _departmentsService : DepartmentsService,
     private _lookupsService : LookupsService
   ){
+
+    // this.loadEmployees();
+  }
+
+  ngOnInit(){
+    this.loadEmployees();
     this.loadPositionsList();
   }
 
@@ -302,6 +308,10 @@ export class EmployeesComponent {
   showConfimrationDialog(empId : number | undefined){
     this.employeeToBeDeleted = empId; // Save Employee Id To Be Deleted Later
     this.showConfirmDialog = true; // Show Confermiation Dialog
+
+    // setTimeout(() => {
+    //   this.deleteDialogContent = "Changed After 10 seconds"
+    // } , 10000);
   }
 
   confirmEmployeeDelete(confirm : boolean){
@@ -310,6 +320,11 @@ export class EmployeesComponent {
     }
     this.employeeToBeDeleted = undefined;
     this.showConfirmDialog = false;
+  }
+
+
+  ngOnDestroy(){
+    console.log("Component Detroyed");
   }
 
 }

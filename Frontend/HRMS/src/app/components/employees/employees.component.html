@@ -187,7 +187,7 @@
                                 [class.invalid-form]="employeeForm.get('departmentId')?.invalid && employeeForm.get('departmentId')?.touched"
                                 formControlName="departmentId">
                                 @for(item of departments; track item.id){
-                                <option [value]="item.id">{{item.name}}</option>
+                                <option [ngValue]="item.id">{{item.name}}</option>
                                 }
                             </select>
                         </div>
@@ -199,7 +199,7 @@
                                 [class.invalid-form]="employeeForm.get('positionId')?.invalid && employeeForm.get('positionId')?.touched"
                                 formControlName="positionId">
                                 @for(item of positions; track item.id){
-                                <option [value]="item.id">{{item.name}}</option>
+                                <option [ngValue]="item.id">{{item.name}}</option>
                                 }
                             </select>
                         </div>
@@ -210,7 +210,7 @@
                             <select class="form-select" id="manager"
                                 formControlName="managerId">
                                 @for(item of managers; track item.id){
-                                <option [value]="item.id">{{item.name}}</option>
+                                <option [ngValue]="item.id">{{item.name}}</option>
                                 }
                             </select>
                         </div>

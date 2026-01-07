@@ -15,4 +15,8 @@ export class ConfirmationDialogComponent {
   confirmDelete(confirm : boolean){
     this.confirm.emit(confirm); // Activate Event
   }
+
+  ngOnChanges(change : any){
+    //console.log(change);
+  }
 }
