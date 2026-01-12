@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using HRMS.Dtos.Shared;
+using HRMS.Enums;
 
 namespace HRMS.Controllers
 {
@@ -17,9 +18,13 @@ namespace HRMS.Controllers
     {
         // Depndency Injuction
         private readonly HRMSContext _dbContext;
-        public EmployeesController(HRMSContext dbContext)
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _config;
+        public EmployeesController(HRMSContext dbContext, IWebHostEnvironment env, IConfiguration config)
         {
             _dbContext = dbContext;
+            _env = env;
+            _config = config;
         }
 
 
@@ -67,7 +72,8 @@ namespace HRMS.Controllers
                                  ManagerId = employee.ManagerId,
                                  ManagerName = manager.FirstName,
                                  UserId = employee.UserId,
-                                 Status = employee.Status
+                                 Status = employee.Status,
+                                 ImagePath = employee.ImagePath != null ? Path.Combine(_config["BaseUrl"], employee.ImagePath) : ""
                              };
 
                 if(role?.ToUpper() != "ADMIN" && role?.ToUpper() != "HR")
@@ -116,7 +122,8 @@ namespace HRMS.Controllers
                         ManagerId = x.ManagerId,
                         ManagerName = x.Manager.FirstName,
                         UserId = x.UserId,
-                        Status = x.Status
+                        Status = x.Status,
+                        ImagePath = x.ImagePath,
                     }).FirstOrDefault(x => x.Id == id);
 
 
@@ -154,7 +161,7 @@ namespace HRMS.Controllers
 
         //[Authorize(Roles = "HR,Admin")]
         [HttpPost("Add")] // Create
-        public IActionResult Add([FromBody] SaveEmployeeDto employeeDto)
+        public IActionResult Add([FromForm] SaveEmployeeDto employeeDto)
         {
             try
             {
@@ -187,7 +194,8 @@ namespace HRMS.Controllers
                                 ManagerId = employeeDto.ManagerId,
                                 //UserId = user.Id
                                 User = user,
-                                Status = employeeDto.Status
+                                Status = employeeDto.Status,
+                                ImagePath = employeeDto.Image != null? UploadImage(employeeDto.Image) : null
                             };
                  _dbContext.Employees.Add(employee);
 
@@ -203,7 +211,7 @@ namespace HRMS.Controllers
 }
        // [Authorize(Roles = "HR,Admin")]
         [HttpPut("Update")] // Update
-        public IActionResult Update([FromBody] SaveEmployeeDto employeeDto)
+        public IActionResult Update([FromForm] SaveEmployeeDto employeeDto)
         {
             try
             {
@@ -225,6 +233,16 @@ namespace HRMS.Controllers
                 employee.DepartmentId = employeeDto.DepartmentId;
                 employee.ManagerId = employeeDto.ManagerId;
                 employee.Status = employeeDto.Status;
+
+                if(employeeDto.Image != null)
+                {
+                    employee.ImagePath = UploadImage(employeeDto.Image);
+                }
+                else if(employeeDto.Image == null && employeeDto.IsImage == false)
+                {
+                    employee.ImagePath = null;
+                }
+
                 _dbContext.SaveChanges();
 
                 return Ok();
@@ -274,7 +292,8 @@ namespace HRMS.Controllers
             {
                 var data = from emp in _dbContext.Employees
                            from pos in _dbContext.Lookups.Where(x => x.Id == emp.PositionId)
-                           where pos.MajorCode == 0 && pos.MinorCode == 3
+                           where pos.MajorCode == (int)LookupMajorCodes.Positions
+                           && pos.MinorCode == (int)PositionsMinorCodes.Manager
                            select new ListDto
                            {
                                Id = emp.Id,
@@ -290,6 +309,40 @@ namespace HRMS.Controllers
 
         }
 
+
+        private string UploadImage(IFormFile Image)
+        {
+            /*
+                \n  // Antoher Line
+                \"  // Quatiation in string
+                \t  // tab space
+                \\  // back slash in string
+             */
+            //var employeeImagesPath = "D:\\HRMS\\HRMS\\wwwroot\\Attachments\\EmployeesImages";
+            var employeeImagesPath = Path.Combine( "Attachments", "EmployeesImages");
+
+            // _env.WebRootPath = "D:\\HRMS\\HRMS\\wwwroot"
+            var wwwrootPath = Path.Combine(_env.WebRootPath, employeeImagesPath);
+
+            if (!Directory.Exists(wwwrootPath)) // True If Path Found, False If Not
+            {
+                Directory.CreateDirectory(wwwrootPath); // If Not Found, Then Create Directory     
+            }
+
+            var fileExtnesion = Path.GetExtension(Image.FileName); // --> .png, .jpg ...
+            var fileName = Guid.NewGuid() + fileExtnesion; // --> 0f8fad5b-d9cb-469f-a165-70867728950e.jpg
+
+            var filePath = Path.Combine(wwwrootPath, fileName);
+
+            using(var stream = new FileStream(filePath, FileMode.Create)) // To make a connection with database or windows files
+            {
+                Image.CopyTo(stream); // Copy from original image to file path
+            }
+
+            return Path.Combine(employeeImagesPath, fileName); 
+            // Attachments\\EmployeesImages\\0f8fad5b-d9cb-469f-a165-70867728950e.jpg
+        }
+
     }
 
 
@@ -303,4 +356,7 @@ namespace HRMS.Controllers
 
     // Method Cannot Use Multiple Parameters Of Type [FromBody]
     // Method Can Use Multiple Parameters Of Type [FromQuery]
+
+
+
 }

@@ -56,6 +56,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseStaticFiles(); // Middleware
+
 app.MapControllers();
 
 app.Run();

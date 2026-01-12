@@ -9,6 +9,7 @@ import { EmployeesService } from '../../services/employees.service';
 import { List } from '../../interfaces/list';
 import { DepartmentsService } from '../../services/departments.service';
 import { LookupsService } from '../../services/lookups.service';
+import { LookupMajorCodes } from '../../enums/lookups-major-codes';
 @Component({
   selector: 'app-employees',
   imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule, ConfirmationDialogComponent],
@@ -33,6 +34,7 @@ export class EmployeesComponent  {
   }
 
   @ViewChild ('closeDialog') closeDialog : ElementRef | undefined;
+  @ViewChild ('imageInput') imageInput !: ElementRef ;
 
   showConfirmDialog : boolean = false;
   employeeToBeDeleted : number | undefined;
@@ -58,6 +60,8 @@ export class EmployeesComponent  {
     positionId : new FormControl(null, [Validators.required]),
     departmentId : new FormControl(null, [Validators.required]),
     managerId : new FormControl(null),
+    image: new FormControl(null),
+    isImage : new FormControl(false)
   });
 
   searchFilterForm : FormGroup = new FormGroup({
@@ -68,9 +72,10 @@ export class EmployeesComponent  {
 
   employeesTableColumns : string[] = [
     "#",
+    "Image",
     "Name",
     "Position",
-    "birthdate",
+    "Birthdate",
     "Status",
     "Email",
     "Salary",
@@ -89,6 +94,12 @@ export class EmployeesComponent  {
     {value : true, name: "Active"},
     {value : false, name: "Inactive"}
   ]
+
+  imageUpload(event : any){
+    this.employeeForm.patchValue({
+      image: event.target.files[0]
+    })
+  }
 
   loadEmployees(){
     this.employees = [];
@@ -119,7 +130,8 @@ export class EmployeesComponent  {
               departmentName: x.departmentName,
               managerId: x.managerId,
               managerName: x.managerName,
-              userId: x.userId
+              userId: x.userId,
+              imagePath: x.imagePath? x.imagePath.replaceAll("\\", "/") : "assets/images/emp-default-image.avif"
             };
 
             this.employees.push(employee);
@@ -178,7 +190,7 @@ export class EmployeesComponent  {
       {id: null, name : "Select Position"}
     ];
 
-    this._lookupsService.getByMajorCode(0).subscribe({
+    this._lookupsService.getByMajorCode(LookupMajorCodes.Positions).subscribe({
       next: (res : any) => {
         if(res.length > 0){
           res.forEach((x : any) => {
@@ -207,6 +219,8 @@ export class EmployeesComponent  {
           departmentId: this.employeeForm.value.departmentId,
           managerId: this.employeeForm.value.managerId,
           positionId: this.employeeForm.value.positionId,
+          image: this.employeeForm.value.image,
+          isImage: this.employeeForm.value.isImage
       };
 
     if(!this.employeeForm.value.id){ // Add Employee
@@ -248,6 +262,12 @@ export class EmployeesComponent  {
     this.employeeForm.reset({
       status : false
     });
+
+    this.clearImage();
+  }
+
+  clearImage(){
+    this.imageInput.nativeElement.value = '';
   }
 
   changePage(pageNumber : number){
@@ -273,7 +293,8 @@ export class EmployeesComponent  {
             status : employee.status,
             positionId : employee.positionId,
             departmentId : employee.departmentId,
-            managerId : employee.managerId
+            managerId : employee.managerId,
+            isImage : employee.imagePath ? true : false
           });
         }
       },
@@ -325,6 +346,12 @@ export class EmployeesComponent  {
 
   ngOnDestroy(){
     console.log("Component Detroyed");
+  }
+
+  removeImage(){
+    this.employeeForm.patchValue({
+      isImage : false
+    })
   }
 
 }

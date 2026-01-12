@@ -12,5 +12,7 @@
         public long? DepartmentId { get; set; }
         public long? ManagerId { get; set; }
         public bool Status { get; set; }
+        public IFormFile? Image { get; set; }
+        public bool IsImage { get; set; }
     }
 }

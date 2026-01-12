@@ -18,6 +18,7 @@
         public string? ManagerName { get; set; }
         public long? UserId { get; set; }
         public bool? Status { get; set; }
+        public string? ImagePath { get; set; }
 
     }
 }
