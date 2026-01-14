@@ -11,7 +11,7 @@ using HRMS.Enums;
 
 namespace HRMS.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]// Data Annotation
     [ApiController]// Data Annotation
     public class EmployeesController : ControllerBase

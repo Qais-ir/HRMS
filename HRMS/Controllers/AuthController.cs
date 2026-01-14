@@ -44,7 +44,7 @@ namespace HRMS.Controllers
 
                 var token = GenrateJwtToken(user); // Create Token
 
-                return Ok(token);
+                return Ok(new { Token = token });
 
             }
             catch(Exception ex)
