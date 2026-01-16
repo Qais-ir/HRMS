@@ -12,7 +12,7 @@ export class DepartmentsService {
 
   }
 
-   getAll(searchObj: any){
+   getByCriteria(searchObj: any){
 
     let params = new HttpParams();
     params = params.set("Name", searchObj.departmentName ?? "");

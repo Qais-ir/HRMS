@@ -1,11 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Employee } from '../../interfaces/employee';
 import { CommonModule } from '@angular/common';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { DatePipe } from '@angular/common';
 import { ConfirmationDialogComponent } from '../../shared-components/confirmation-dialog/confirmation-dialog.component';
-import { EmployeesService } from '../../services/employees.service';
 import { List } from '../../interfaces/list';
 import { DepartmentsService } from '../../services/departments.service';
 import { LookupsService } from '../../services/lookups.service';
@@ -68,7 +66,7 @@ export class DepartmentsComponent {
       floorNumber: this.searchFilterForm.value.FloorNumber
     }
 
-    this._departmentsService.getAll(searchObj).subscribe({
+    this._departmentsService.getByCriteria(searchObj).subscribe({
       next: (res: any) => {
         if (res?.length > 0) {
 

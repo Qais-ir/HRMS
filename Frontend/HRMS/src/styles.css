@@ -21,6 +21,10 @@ html {
     border-color: red;
 }
 
+.justify-content-end{
+    display: flex;
+    justify-content: flex-end;
+}
 
 
 @media (max-width: 650px) {

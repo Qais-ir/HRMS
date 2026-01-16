@@ -4,6 +4,7 @@ using HRMS.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRMS.Migrations
 {
     [DbContext(typeof(HRMSContext))]
-    partial class HRMSContextModelSnapshot : ModelSnapshot
+    [Migration("20260116151118_vacation-table")]
+    partial class vacationtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,34 +194,6 @@ namespace HRMS.Migrations
                             MajorCode = 1,
                             MinorCode = 3,
                             Name = "Technical"
-                        },
-                        new
-                        {
-                            Id = 9L,
-                            MajorCode = 2,
-                            MinorCode = 0,
-                            Name = "Vacation Types"
-                        },
-                        new
-                        {
-                            Id = 10L,
-                            MajorCode = 2,
-                            MinorCode = 1,
-                            Name = "Annual Vacation"
-                        },
-                        new
-                        {
-                            Id = 11L,
-                            MajorCode = 2,
-                            MinorCode = 2,
-                            Name = "Sick Vacation"
-                        },
-                        new
-                        {
-                            Id = 12L,
-                            MajorCode = 2,
-                            MinorCode = 3,
-                            Name = "Unpaid Vacation"
                         });
                 });
 

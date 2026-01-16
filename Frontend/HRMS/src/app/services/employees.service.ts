@@ -6,13 +6,13 @@ import { Employee } from '../interfaces/employee';
 })
 export class EmployeesService {
 
-  apiUrl : string = "https://localhost:44392/api/Employees";
+  apiUrl: string = "https://localhost:44392/api/Employees";
 
-  constructor(private _http : HttpClient) { 
+  constructor(private _http: HttpClient) {
 
   }
 
-  getByCriteria(searchObj : any){
+  getByCriteria(searchObj: any) {
 
     // let token = localStorage.getItem("token");
     // let headers = new HttpHeaders();
@@ -23,14 +23,14 @@ export class EmployeesService {
     params = params.set("PositionId", searchObj.positionId ?? "");
     params = params.set("Status", searchObj.status ?? "");
 
-    return this._http.get(this.apiUrl + "/GetByCriteria", {params});
+    return this._http.get(this.apiUrl + "/GetByCriteria", { params });
   }
 
-  getManagers(){
+  getManagers() {
     return this._http.get(this.apiUrl + "/GetManagers");
   }
 
-  add(employee : Employee){
+  add(employee: Employee) {
     let formData = new FormData();
     formData.set("Id", employee.id?.toString() ?? "");
     formData.set("FirstName", employee.firstName ?? "");
@@ -47,11 +47,11 @@ export class EmployeesService {
     return this._http.post(this.apiUrl + "/Add", formData);
   }
 
-  getById(id : number){
+  getById(id: number) {
     return this._http.get(this.apiUrl + `/GetById/${id}`);
   }
 
-  update(employee : Employee){
+  update(employee: Employee) {
 
     let formData = new FormData();
     formData.set("Id", employee.id?.toString() ?? "");
@@ -69,7 +69,14 @@ export class EmployeesService {
     return this._http.put(this.apiUrl + "/Update", formData);
   }
 
-  delete(id : number){
+  delete(id: number) {
     return this._http.delete(this.apiUrl + `/Delete/${id}`);
+  }
+
+  getEmployeesList(currentUserOnly?: boolean) {
+    let params = new HttpParams();
+    params = params.set("currentUserOnly", currentUserOnly ?? "");
+
+    return this._http.get(this.apiUrl + "/GetEmployeeList", { params });
   }
 }
