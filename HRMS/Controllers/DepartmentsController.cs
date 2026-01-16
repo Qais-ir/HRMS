@@ -13,12 +13,7 @@ namespace HRMS.Controllers
     [ApiController]
     public class DepartmentsController : ControllerBase
     {
-        public static List<Department> departments = new List<Department>()
-        {
-            new Department(){Id = 1, Name = "Human Resources", Description = "Hr Department", FloorNumber = 1},
-            new Department(){Id = 2, Name = "Finance", Description = "Finance Department", FloorNumber = 2},
-            new Department(){Id = 3, Name = "Development", Description = "Development Department", FloorNumber = 1},
-        };
+
 
         private readonly HRMSContext _dbContext;
         public DepartmentsController(HRMSContext dbContext)
@@ -85,7 +80,7 @@ namespace HRMS.Controllers
 
         }
 
-       // [Authorize(Roles = "HR,Admin")]
+        [Authorize(Roles = "HR,Admin")]
         [HttpPost("Add")]
         public IActionResult Add([FromBody] SaveDepartmentDto saveDto)
         {
@@ -109,7 +104,7 @@ namespace HRMS.Controllers
             }
         }
 
-       // [Authorize(Roles = "HR,Admin")]
+        [Authorize(Roles = "HR,Admin")]
         [HttpPut("Update")]
         public IActionResult Update([FromBody] SaveDepartmentDto saveDto)
         {
@@ -136,7 +131,7 @@ namespace HRMS.Controllers
 
         }
 
-       // [Authorize(Roles = "HR,Admin")]
+        [Authorize(Roles = "HR,Admin")]
         [HttpDelete("Delete/{id}")]
         public IActionResult Delete(long id)
         {

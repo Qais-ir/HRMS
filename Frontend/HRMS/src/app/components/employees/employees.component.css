@@ -1,18 +1,4 @@
 
-.table-header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.align-end{
-    align-items: end;
-}
-
-.invalid-form{
-    border-color: red;
-}
-
 .profile-img{
     width: 3rem;
     height: 3rem;
