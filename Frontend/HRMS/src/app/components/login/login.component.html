@@ -1,29 +1,45 @@
-<div>
-    <div [formGroup]="loginForm">
+<div class="main">
+    <div class="container-fluid form">
 
-        <div>
-            <label for="username"
-                class="form-label">Username</label>
-            <input type="text" class="form-control"
-                [class.invalid-form]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-                id="username" formControlName="username"
-                placeholder="Username">
+        <div class="header">
+            <span>HR</span>
+            <span>Management System</span>
         </div>
 
-        <div>
-            <label for="password"
-                class="form-label">Password</label>
-            <input type="text" class="form-control"
-                [class.invalid-form]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-                id="password" formControlName="password"
-                placeholder="Password">
+        <div class="content" [formGroup]="loginForm">
+            <div class="mb-3">
+                <label for="username"
+                    class="form-label">Username</label>
+                <input type="text" class="form-control"
+                    [class.invalid-form]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+                    id="username" formControlName="username"
+                    placeholder="Username">
+            </div>
+
+            <div class="mb-3">
+                <label for="password"
+                    class="form-label">Password</label>
+                <input type="password" class="form-control"
+                    [class.invalid-form]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                    id="password" formControlName="password"
+                    placeholder="Password">
+            </div>
+
         </div>
+
+        <div class="actions">
+            <button type="button" class="btn btn-secondary login-btn"
+                (click)="login()">
+                Login
+            </button>
+        </div>
+
+        @if(showErrorMessage){
+        <div class="err-message">
+            * {{errorMessage}}
+        </div>
+        }
 
     </div>
 
-    <div>
-        <button type="button" class="btn btn-secondary" (click)="login()">
-            Login
-        </button>
-    </div>
 </div>

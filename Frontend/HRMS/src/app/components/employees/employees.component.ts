@@ -31,6 +31,7 @@ export class EmployeesComponent  {
   ngOnInit(){
     this.loadEmployees();
     this.loadPositionsList();
+    this.checkRole();
   }
 
   @ViewChild ('closeDialog') closeDialog : ElementRef | undefined;
@@ -41,6 +42,8 @@ export class EmployeesComponent  {
 
   deleteDialogTitle : string = "Delete Confirmation";
   deleteDialogContent : string = "Are you sure you want to delete this employee?";
+
+  disableActionButtons: boolean = false;
 
   paginationConfig = {
     itemsPerPage: 5,
@@ -352,6 +355,14 @@ export class EmployeesComponent  {
     this.employeeForm.patchValue({
       isImage : false
     })
+  }
+
+  checkRole(){
+    let role = localStorage.getItem('role');
+
+    if(role?.toUpperCase() != 'ADMIN' && role?.toUpperCase() != 'HR'){
+      this.disableActionButtons = true;
+    }
   }
 
 }

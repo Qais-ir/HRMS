@@ -44,7 +44,7 @@ namespace HRMS.Controllers
 
                 var token = GenrateJwtToken(user); // Create Token
 
-                return Ok(new { Token = token });
+                return Ok(token);
 
             }
             catch(Exception ex)
@@ -53,7 +53,7 @@ namespace HRMS.Controllers
             }
         }
 
-        private string GenrateJwtToken(User user)
+        private TokenDto GenrateJwtToken(User user)
         {
             var claims = new List<Claim>(); // User Info
 
@@ -63,15 +63,18 @@ namespace HRMS.Controllers
             claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             claims.Add(new Claim(ClaimTypes.Name, user.Username));
 
+            string role; 
             // Role --> Hr, Manager, Developer, Admin
             if (user.IsAdmin)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                role = "Admin";
             }
             else
             {
                 var employee = _dbContext.Employees.Include(x => x.Lookup).FirstOrDefault(x => x.UserId == user.Id);
                 claims.Add(new Claim(ClaimTypes.Role, employee.Lookup.Name));
+                role = employee.Lookup.Name;
             }
 
             // Secret Key  = WHAFWEI#!@S!!112312WQEQW@RWQEQW432
@@ -88,7 +91,7 @@ namespace HRMS.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.WriteToken(tokenSettings);
 
-            return token;
+            return new TokenDto { Token = token, Role = role};
         }
     }
 }

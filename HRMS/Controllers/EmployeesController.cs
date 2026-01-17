@@ -78,7 +78,7 @@ namespace HRMS.Controllers
 
                 if(role?.ToUpper() != "ADMIN" && role?.ToUpper() != "HR")
                 {
-                   // result = result.Where(x => x.UserId == long.Parse(userId));
+                    result = result.Where(x => x.UserId == long.Parse(userId));
                 }
 
                 return Ok(result);
@@ -159,7 +159,7 @@ namespace HRMS.Controllers
             }
         }
 
-        //[Authorize(Roles = "HR,Admin")]
+        [Authorize(Roles = "HR,Admin")]
         [HttpPost("Add")] // Create
         public IActionResult Add([FromForm] SaveEmployeeDto employeeDto)
         {
@@ -209,7 +209,7 @@ namespace HRMS.Controllers
             }
 
 }
-       // [Authorize(Roles = "HR,Admin")]
+        [Authorize(Roles = "HR,Admin")]
         [HttpPut("Update")] // Update
         public IActionResult Update([FromForm] SaveEmployeeDto employeeDto)
         {
@@ -254,7 +254,7 @@ namespace HRMS.Controllers
             
         }
 
-        //[Authorize(Roles = "HR,Admin")]
+        [Authorize(Roles = "HR,Admin")]
         [HttpDelete("Delete/{id}")] // Delete
         public IActionResult Delete(long id)
         {

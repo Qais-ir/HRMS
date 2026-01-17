@@ -1,0 +1,36 @@
+.main{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6c757d;
+}
+
+.form{
+    background-color: white;
+    margin: 0px 30%;
+    height: 70%;
+    border-radius: 13px;
+}
+
+.header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 2rem 0;
+}
+
+.form-label{
+    font-weight: 500;
+    margin-bottom: 0.4rem !important;
+}
+
+.login-btn{
+    width: 100%;
+}
+
+.err-message{
+    color: red;
+}
