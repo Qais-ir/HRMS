@@ -6,7 +6,7 @@ import { Employee } from '../interfaces/employee';
 })
 export class EmployeesService {
 
-  apiUrl: string = "https://localhost:44392/api/Employees";
+  apiUrl: string = "https://hrmstemp.runasp.net/api/Employees";
 
   constructor(private _http: HttpClient) {
 

@@ -5,7 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class LookupsService {
-  apiUrl : string = "https://localhost:44392/api/Lookups";
+  apiUrl : string = "https://hrmstemp.runasp.net/api/Lookups";
 
 
   constructor(

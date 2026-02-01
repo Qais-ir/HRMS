@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 
 export class AuthService {
-  apiUrl : string = "https://localhost:44392/api/Auth";
+  apiUrl : string = "https://hrmstemp.runasp.net/api/Auth";
   constructor(private _http : HttpClient) { }
 
   login(loginForm : any){

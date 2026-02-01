@@ -6,7 +6,7 @@ import { Vacation } from '../interfaces/vacation';
   providedIn: 'root'
 })
 export class VacationsService {
-  apiUrl : string = "https://localhost:44392/api/Vacations";
+  apiUrl : string = "https://hrmstemp.runasp.net/api/Vacations";
   constructor(private _http : HttpClient){
 
   }

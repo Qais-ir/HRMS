@@ -7,7 +7,7 @@ import { Department } from '../interfaces/department';
   providedIn: 'root'
 })
 export class DepartmentsService {
-   apiUrl : string = "https://localhost:44392/api/Departments";
+   apiUrl : string = "https://hrmstemp.runasp.net/api/Departments";
   constructor(private _http : HttpClient){
 
   }
