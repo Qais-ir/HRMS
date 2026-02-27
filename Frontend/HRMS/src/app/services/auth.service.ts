@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthService {
-  apiUrl : string = "https://hrmstemp.runasp.net/api/Auth";
+  apiUrl : string = `${environment.apiUrl}/Auth`;
   constructor(private _http : HttpClient) { }
 
   login(loginForm : any){

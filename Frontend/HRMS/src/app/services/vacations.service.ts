@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Vacation } from '../interfaces/vacation';
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class VacationsService {
-  apiUrl : string = "https://hrmstemp.runasp.net/api/Vacations";
+  apiUrl : string = `${environment.apiUrl}/Vacations`;
   constructor(private _http : HttpClient){
 
   }

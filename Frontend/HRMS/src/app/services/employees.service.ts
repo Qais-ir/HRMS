@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Employee } from '../interfaces/employee';
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeesService {
 
-  apiUrl: string = "https://hrmstemp.runasp.net/api/Employees";
+  apiUrl: string = `${environment.apiUrl}/Employees`;
 
   constructor(private _http: HttpClient) {
 
