@@ -26,11 +26,12 @@ namespace HRMS.Controllers
 
         // Endpoint
         [HttpGet("GetByCriteria")] // Read
-        public IActionResult GetByCriteria([FromQuery] string? position) // (?) --> Optional / Nullable
+        public IActionResult GetByCriteria([FromQuery] SearchEmployeeDto employeeDto) // (?) --> Optional / Nullable
         {
 
             var data = from employee in employees
-                       where (position == null || employee.Position == position)
+                       where (employeeDto.Position == null || employee.Position.ToUpper().Contains(employeeDto.Position.ToUpper())) &&
+                       (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper()))
                        orderby employee.Id
                        select new EmployeeDto
                        {
