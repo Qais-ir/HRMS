@@ -41,7 +41,7 @@ namespace HRMS.Controllers
                            Position = employee.Position,
                            BirthDate = employee.BirthDate,
                            StartDate = employee.StartDate,
-                           EndDate = employee.EndDate
+                         //  EndDate = employee.EndDate
                        };
 
             return Ok(data);
@@ -63,7 +63,7 @@ namespace HRMS.Controllers
                 Position = employee.Position,
                 BirthDate = employee.BirthDate,
                 StartDate = employee.StartDate,
-                EndDate = employee.EndDate
+               // EndDate = employee.EndDate
             }).FirstOrDefault(x => x.Id == id);
 
             if(data == null)
