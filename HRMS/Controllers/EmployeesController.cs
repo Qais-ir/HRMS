@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using HRMS.Models;
+﻿using HRMS.DbContexts;
 using HRMS.Dtos.Employee;
+using HRMS.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HRMS.Controllers
 {
@@ -10,6 +12,15 @@ namespace HRMS.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
+
+        private readonly HRMSContext _dbContext;
+
+        public EmployeesController(HRMSContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        // Nuget Package : Library
         public static List<Employee> employees = new List<Employee>()
         {
             new Employee(){ Id = 1, FirstName = "Ahmad", LastName = "Nasser", Email = "Ahmad@123.com", Position = "Developer", BirthDate = new DateTime(2000,1,25), Phone = "+96255888625", IsActive = true, StartDate = new DateTime(2026,1,1), EndDate = new DateTime(2026,3,1)},
@@ -29,7 +40,7 @@ namespace HRMS.Controllers
         public IActionResult GetByCriteria([FromQuery] SearchEmployeeDto employeeDto) // (?) --> Optional / Nullable
         {
 
-            var data = from employee in employees
+            var data = from employee in _dbContext.Employees
                        where (employeeDto.Position == null || employee.Position.ToUpper().Contains(employeeDto.Position.ToUpper())) &&
                        (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper()))
                        orderby employee.Id
