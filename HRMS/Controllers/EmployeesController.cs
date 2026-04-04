@@ -35,7 +35,7 @@ namespace HRMS.Controllers
         {
 
             var data = from employee in _dbContext.Employees
-                       from department in _dbContext.Departments.Where(x => x.Id == employee.DepartmentId).DefaultIfEmpty() // --> Left Join
+                      // from department in _dbContext.Departments.Where(x => x.Id == employee.DepartmentId).DefaultIfEmpty() // --> Left Join
                        from manager in _dbContext.Employees.Where(x => x.Id == employee.ManagerId).DefaultIfEmpty() // --> Left Join
                        where (employeeDto.Position == null || employee.Position.ToUpper().Contains(employeeDto.Position.ToUpper())) &&
                        (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper()))
@@ -51,7 +51,7 @@ namespace HRMS.Controllers
                            StartDate = employee.StartDate,
                            EndDate = employee.EndDate,
                            DepartmentId = employee.DepartmentId,
-                           DepartmentName = department.Name,
+                          // DepartmentName = department.Name,
                            ManagerId = employee.ManagerId,
                            ManagerName = manager.FirstName
                        };
