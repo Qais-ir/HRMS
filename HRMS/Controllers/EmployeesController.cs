@@ -37,7 +37,8 @@ namespace HRMS.Controllers
             var data = from employee in _dbContext.Employees
                        from department in _dbContext.Departments.Where(x => x.Id == employee.DepartmentId).DefaultIfEmpty() // --> Left Join
                        from manager in _dbContext.Employees.Where(x => x.Id == employee.ManagerId).DefaultIfEmpty() // --> Left Join
-                       where (employeeDto.Position == null || employee.Position.ToUpper().Contains(employeeDto.Position.ToUpper())) &&
+                       from lookup in _dbContext.Lookups.Where(x => x.Id == employee.PositionId).DefaultIfEmpty()
+                       where (employeeDto.PositionId == null || employee.PositionId == employeeDto.PositionId) &&
                        (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper()))
                        orderby employee.Id
                        select new EmployeeDto
@@ -46,7 +47,9 @@ namespace HRMS.Controllers
                            //FirstName = employee.FirstName,
                           // LastName = employee.LastName,
                            Name = employee.FirstName + " " + employee.LastName,
-                           Position = employee.Position,
+                         //  Position = employee.Position,
+                           PositionId = employee.PositionId,
+                           PositionName = lookup.Name,
                            BirthDate = employee.BirthDate,
                            StartDate = employee.StartDate,
                            EndDate = employee.EndDate,
@@ -90,17 +93,19 @@ namespace HRMS.Controllers
             {
                 Id = employee.Id,
                 Name = employee.FirstName + " " + employee.LastName,
-                Position = employee.Position,
+                //Position = employee.Position,
                 BirthDate = employee.BirthDate,
                 StartDate = employee.StartDate,
                 EndDate = employee.EndDate,
                 DepartmentId = employee.DepartmentId,
                 DepartmentName = employee.Department.Name,
                 ManagerId = employee.ManagerId,
-                ManagerName = employee.Manager.FirstName
+                ManagerName = employee.Manager.FirstName,
+                PositionId = employee.PositionId,
+                PositionName = employee.Lookup.Name
             }).FirstOrDefault(x => x.Id == id);
 
-            // var data = _dbContext.Employees.Include(x => x.Department).Include(x => x.Manager).FirstOrDefault(x => x.Id == id);
+             //var data = _dbContext.Employees.Include(x => x.Department).Include(x => x.Manager).FirstOrDefault(x => x.Id == id);
 
             if (data == null)
             {
@@ -112,6 +117,7 @@ namespace HRMS.Controllers
 
         // Include --> Eager Loading
         // Select --> Projection
+        // Lazy Loading --> ??
 
         [HttpPost] // Create
         public IActionResult Add([FromBody] SaveEmployeeDto employee)
@@ -121,7 +127,7 @@ namespace HRMS.Controllers
                 Id = 0, //(employees.LastOrDefault()?.Id ?? 0) + 1,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
-                Position = employee.Position,
+                PositionId = employee.PositionId,
                 BirthDate = employee.BirthDate,
                 StartDate = employee.StartDate,
                 EndDate = employee.EndDate,
@@ -155,7 +161,7 @@ namespace HRMS.Controllers
 
             employee.FirstName = employeeDto.FirstName;
             employee.LastName = employeeDto.LastName;
-            employee.Position = employeeDto.Position;
+            employee.PositionId = employeeDto.PositionId;
             employee.BirthDate = employeeDto.BirthDate;
             employee.StartDate = employeeDto.StartDate;
             employee.Email = employeeDto.Email;
