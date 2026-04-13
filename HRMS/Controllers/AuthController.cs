@@ -3,6 +3,7 @@ using HRMS.Dtos.AuthDto;
 using HRMS.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -62,6 +63,8 @@ namespace HRMS.Controllers
             else
             {
                 // Get Employee Position As Role
+                var employee = _dbContext.Employees.Include(x => x.Lookup).FirstOrDefault(x => x.UserId == user.Id);
+                claims.Add(new Claim(ClaimTypes.Role, employee.Lookup.Name));
             }
 
 

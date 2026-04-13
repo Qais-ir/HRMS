@@ -1,6 +1,7 @@
 ﻿using HRMS.DbContexts;
 using HRMS.Dtos.Employee;
 using HRMS.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HRMS.Controllers
 {
     // Data Annotations
+    [Authorize]
     [Route("api/[controller]")] // api/Employees
     [ApiController]
     public class EmployeesController : ControllerBase
@@ -143,6 +145,17 @@ namespace HRMS.Controllers
         {
             try
             {
+                var user = new User()
+                {
+                    Id = 0,
+                    Username = $"{employee.FirstName}_{employee.LastName}_HRMS", // Ahmad Nasser --> Ahmad_Nasser_HRMS
+                    HashedPassword = BCrypt.Net.BCrypt.HashPassword($"{employee.FirstName}@123"), // Ahmad --> Ahmad@123
+                    IsAdmin = false                                                                              
+                };
+
+                _dbContext.Users.Add(user);
+               // _dbContext.SaveChanges();
+
                 var newEmployee = new Employee()
                 {
                     Id = 0, //(employees.LastOrDefault()?.Id ?? 0) + 1,
@@ -157,7 +170,9 @@ namespace HRMS.Controllers
                     Phone = employee.Phone,
                     Salary = employee.Salary,
                     DepartmentId = employee.DepartmentId,
-                    ManagerId = employee.ManagerId
+                    ManagerId = employee.ManagerId,
+                   // UserId = user.Id
+                    User = user
                 };
 
                 _dbContext.Employees.Add(newEmployee);
