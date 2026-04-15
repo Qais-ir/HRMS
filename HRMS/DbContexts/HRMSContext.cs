@@ -38,6 +38,15 @@ namespace HRMS.DbContexts
             modelBuilder.Entity<User>().HasData(
                     new User { Id = 1, Username = "Admin", IsAdmin = true, HashedPassword = "$2a$11$tizSPUwyAVKiSCsq6U5NseLdmKVBhoyXNHCwMUphnf9kF38MzrE9O" }
                 );
+
+
+            modelBuilder.Entity<Employee>()
+                .HasIndex(x => x.UserId)
+                .IsUnique(); // One To One Relatioship
+
+            modelBuilder.Entity<User>()
+                .HasIndex(x => x.Username)
+                .IsUnique();
         }
 
         // Tables --> DbSet
