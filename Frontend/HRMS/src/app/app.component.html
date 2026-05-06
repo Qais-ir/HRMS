@@ -14,9 +14,50 @@
   Array : {{arr}}
 </div>  -->
 
-<div *ngFor="let st of students">
-  <span style="margin-right: 5px;">{{st.name}}</span>
-  <span style="margin-right: 5px;">{{st.mark}}%</span>
+<!-- Before Angular 17 -->
+<!-- <div *ngFor="let st of students; index as i">
+  <span>{{i + 1}}. </span>
+  <span style="margin-right: 5px;" [ngClass]="{'passed': st.mark > 50, 'failed': st.mark <= 50}">{{st.name}}</span>
+  <span style="margin-right: 5px;" [ngStyle]="{'color': st.mark > 50 ? 'green' : 'red'}">{{st.mark}}%</span>
   <span *ngIf="st.mark > 50">Passed</span>
   <span *ngIf="st.mark <= 50">Failed</span>
+</div> -->
+
+<!-- structural directives : ngIf, ngFor, ngSwitch -->
+<!-- attribute directives : ngClass, ngStyle, ngModel -->
+<!-- Custom directive -->
+<br>
+<br>
+
+<!-- After Angular 17 -->
+<!-- @for(st of students; track st.id; let i = $index){
+<div>
+  <span>{{i + 1}}. </span>
+  <span style="margin-right: 5px;" [class]="st.mark > 50 ? 'passed' : 'falied'" [class.passed]="st.mark > 50" [class.failed]="st.mark <= 50">{{st.name}}</span>
+  <span style="margin-right: 5px;" [style.color]="st.mark > 50 ? 'green' : 'red'">{{st.mark}}%</span>
+  @if(st.mark > 50){
+    <span>Passed</span>
+  }
+  @else{
+    <span>Failed</span>
+  }
 </div>
+} -->
+<!-- Templet Syntax -->
+<!-- built-in control flow syntax -->
+
+
+
+<!-- Data Binding -->
+
+        <div style="margin: 40px;">
+            <img id="image" width="50%" height="50%"
+            [src]="images[currentIndex]"
+            [alt]="altMessage"
+            >
+
+            <div>
+                <button type="button" id="previous" [disabled]="currentIndex == 0" (click)="previous()"> Previous</button>
+                <button type="button" id="next" [disabled]="currentIndex == images.length - 1" (click)="next()"> Next</button>
+            </div>
+        </div>
