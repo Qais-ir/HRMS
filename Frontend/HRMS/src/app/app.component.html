@@ -1,213 +1,27 @@
-<!-- <div class="title">
-  Title : {{title}}
-</div> 
+<nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">HRMS</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Employees</a>
+        </li>
 
-<div class="title">
-  Number : {{number}}
-</div> 
+        <li class="nav-item">
+          <a class="nav-link " aria-current="page" href="#">Departments</a>
+        </li>
 
-<div class="title">
-  Boolean : {{bool}}
-</div> 
+        <li class="nav-item">
+          <a class="nav-link " aria-current="page" href="#">Vacations</a>
+        </li>
 
-<div class="title">
-  Array : {{arr}}
-</div>  -->
+      </ul>
 
-<!-- Before Angular 17 -->
-<!-- <div *ngFor="let st of students; index as i">
-  <span>{{i + 1}}. </span>
-  <span style="margin-right: 5px;" [ngClass]="{'passed': st.mark > 50, 'failed': st.mark <= 50}">{{st.name}}</span>
-  <span style="margin-right: 5px;" [ngStyle]="{'color': st.mark > 50 ? 'green' : 'red'}">{{st.mark}}%</span>
-  <span *ngIf="st.mark > 50">Passed</span>
-  <span *ngIf="st.mark <= 50">Failed</span>
-</div> -->
-
-<!-- structural directives : ngIf, ngFor, ngSwitch -->
-<!-- attribute directives : ngClass, ngStyle, ngModel -->
-<!-- Custom directive -->
-<br>
-<br>
-
-<!-- After Angular 17 -->
-<!-- @for(st of students; track st.id; let i = $index){
-<div>
-  <span>{{i + 1}}. </span>
-  <span style="margin-right: 5px;" [class]="st.mark > 50 ? 'passed' : 'falied'" [class.passed]="st.mark > 50" [class.failed]="st.mark <= 50">{{st.name}}</span>
-  <span style="margin-right: 5px;" [style.color]="st.mark > 50 ? 'green' : 'red'">{{st.mark}}%</span>
-  @if(st.mark > 50){
-    <span>Passed</span>
-  }
-  @else{
-    <span>Failed</span>
-  }
-</div>
-} -->
-<!-- Templet Syntax -->
-<!-- built-in control flow syntax -->
-
-<!-- Data Binding -->
-<!-- 
-        <div style="margin: 40px;">
-            <img id="image" width="50%" height="50%"
-            [src]="images[currentIndex]"
-            [alt]="altMessage"
-            >
-
-            <div>
-                <button type="button" id="previous" [disabled]="currentIndex == 0" (click)="previous()"> Previous</button>
-                <button type="button" id="next" [disabled]="currentIndex == images.length - 1" (click)="next()"> Next</button>
-            </div>
-        </div> -->
-
-<!-- Two Way Data Binding -->
-<!-- 
-<form [formGroup]="form">
-  <div style="margin: 40px;">
-    <input formControlName="name" type="text">
-  </div>
-</form>
-
-<div class="title">
-  {{form.value.name}}
-</div> -->
-
-<!-- Inline Styling -->
-<div class="header" style>
-  <h2>Select And Submit To Join One Of Our Courses</h2>
-  <div class="content" id="content">
-    <div class="account">
-      <span class="email">q.irshaid&#64;gmail.com</span>
-      <span class="switch-account">
-        <a href="https://www.google.com/account/about/?hl=en-US"
-          target="_blank" class>Switch
-          Accont</a>
-      </span>
-      <span class="icon">
-        <i class="fa-solid fa-cloud-arrow-up"></i>
-      </span>
-    </div>
-    <p class="description">
-      The name, email address and photo associated with your
-      Google Account will be recorded when you upload files and
-      submit this form
-    </p>
-    <p class="warning">
-      * Indecates required question
-    </p>
-  </div>
-</div>
-
-<form [formGroup]="form">
-  <div class="question">
-    <div class="title">
-      <label for="email">
-        Email
-        <span class="required-icon">*</span>
-      </label>
-    </div>
-    <div class="input-field email-input">
-      <input id="email" type="email" formControlName="email" [class.red-border]="form.get('email')?.invalid && form.get('email')?.touched"
-        placeholder="Your Email Address">
     </div>
   </div>
-  <div class="question">
-    <div class="title">
-      <label for="name">
-        Name
-        <span class="required-icon">*</span>
-      </label>
-    </div>
-    <div class="input-field">
-      <input id="name" type="text" formControlName="name"
-        placeholder="Your Full Name" [class.red-border]="form.get('name')?.invalid && form.get('name')?.touched">
-    </div>
-  </div>
-  <div class="question">
-    <div class="title">
-      <label for="phone">
-        Phone Number
-        <span class="required-icon">*</span>
-      </label>
-    </div>
-    <div class="input-field">
-      <input id="phone" type="text" formControlName="phone" [class.red-border]="form.get('phone')?.invalid && form.get('phone')?.touched"
-        placeholder="Your Phone Number">
-    </div>
-  </div>
-  <div class="question">
-    <div class="title">
-      <label for="age">
-        Age
-        <!-- <span class="required-icon">*</span> -->
-      </label>
-    </div>
-    <div class="input-field">
-      <input id="age" type="number" min="18" max="45" formControlName="age" [class.red-border]="form.get('age')?.invalid && form.get('age')?.touched"
-        placeholder="Your Age">
-    </div>
-  </div>
-  <div class="question">
-    <div class="title">
-      <label for="course">
-        Course
-        <span class="required-icon">*</span>
-      </label>
-    </div>
-    <div class="input-field">
-      <select id="course" formControlName="course" [class.red-border]="form.get('course')?.invalid && form.get('course')?.touched">
-        @for(course of courses; track course.id){
-        <option [value]="course.id">{{course.name}}</option>
-        }
+</nav>
 
-      </select>
-    </div>
-  </div>
-  <div class="actions">
-    <button type="button" class="action-btn submit-btn" (click)="submit()" [class.disbaled-button]="form.invalid" [disabled]="form.invalid" >Submit</button>
-
-    <button type="button" class="action-btn reset-btn" (click)="resetForm()">Clear Form</button>
-  </div>
-
-
-  <!-- <div class="title">
-    {{form.value.course}}
-  </div> -->
-</form>
-
-<div class="footer">
-  <p class="copy-right">
-    This form was created inside Princess Sumaya University for
-    Technology. Does this form look suspicious?
-    <a href>Report</a>
-  </p>
-  <p class="logo">
-    Google Forms
-  </p>
- <br>
- <br>
- <br>
-  <p class="title">
-    <!-- Pipes -->
-     Price : {{price | currency: 'USD'}}
-     <!-- Price : {{price}} -->
-  </p>
- <br>
- <br>
- <br>
-  <p class="title">
-    <!-- Pipes -->
-     Date : {{date | date:'dd-M-yyyy hh:mm'}}
-
-  </p>
-  
-
-   <br>
- <br>
- <br>
-  <p class="title">
-    <!-- Pipes -->
-     Name : {{name | lowercase}}
-
-  </p>
-</div>
+<app-employees></app-employees>
