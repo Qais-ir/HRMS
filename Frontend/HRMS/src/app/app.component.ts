@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NgIf, NgFor, NgClass, NgStyle } from '@angular/common';
+import { NgIf, NgFor, NgClass, NgStyle, CommonModule } from '@angular/common';
+import { FormsModule, FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NgIf, NgFor, NgClass, NgStyle],
+  imports: [RouterOutlet, NgIf, NgFor, NgClass, NgStyle, FormsModule, ReactiveFormsModule, CommonModule],
+  // Component, Directive, Module, Pipes
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -31,6 +34,29 @@ export class AppComponent {
 
     currentIndex = 0; // Global Varibale
 
+    name = "Ahmad";
+    email = "Ahmad";
+    phone = "Ahmad";
+    age = "Ahmad";
+
+    courses = [
+      {id : 1, name : "Asp.net"},
+      {id : 2, name : "Angular"},
+      {id : 3, name : "Python"},
+      {id : 4, name : "Java"},
+    ]
+
+    form = new FormGroup({
+      name : new FormControl(null, Validators.required),
+      email : new FormControl(null, [Validators.required, Validators.email]),
+      phone : new FormControl(null, Validators.required),
+      age : new FormControl(null, [Validators.minLength(18), Validators.maxLength(45)]),
+      course : new FormControl(1, Validators.required),
+    });
+
+
+    price: number = 112155.55;
+    date : Date = new Date();
   temp(x : number, y : string) : number{
     let number : number = 15; // Local Variable
     //number = "";
@@ -46,5 +72,21 @@ export class AppComponent {
     if(this.currentIndex > 0){
       this.currentIndex--;
     }
+  }
+
+  resetForm(){
+    this.form.reset({
+      course: 1
+    });
+  }
+
+  submit(){
+    let username = this.form.value.name;
+    let course = this.courses.find(x => x.id == this.form.value.course);
+
+    alert(`Welcome ${username} to the academy
+      We will contact you shortly about the ${course?.name} Course `);
+
+      window.location.reload();
   }
 }
