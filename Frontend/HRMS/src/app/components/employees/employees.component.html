@@ -1,8 +1,90 @@
-<div class="card" style="width: 18rem;">
-  <img src="https://i0.wp.com/picjumbo.com/wp-content/uploads/beautiful-fall-nature-scenery-free-image.jpeg?w=2210&quality=70" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+<div class="container-fluid">
+
+  <div class="card">
+    <div class="card-header">
+      <h5>
+        <i class="bi bi-funnel-fill"></i>
+        Filter
+      </h5>
+    </div>
+    <div class="card-body">
+
+      <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+          <label for="employeeName" class="form-label">Employee Name</label>
+          <input type="text" class="form-control" id="employeeName"
+            placeholder="Name">
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-12">
+          <label for="position" class="form-label">Position</label>
+          <input type="text" class="form-control" id="position"
+            placeholder="Position">
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-12">
+          <label for="status" class="form-label">Status</label>
+          <input type="text" class="form-control" id="status"
+            placeholder="Status">
+        </div>
+      </div>
+
+      <div class="text-end mt-3">
+        <button type="button" class="btn btn-outline-secondary">
+          <i class="bi bi-search"></i>
+          Search
+        </button>
+      </div>
+
+    </div>
   </div>
+
+  <div class="card mt-3">
+    <div class="card-header title-header">
+      <h5>Employees</h5>
+
+      <div>
+        <button type="button" class="btn btn-outline-secondary">
+          <i class="bi bi-person-fill-add"></i>
+          Add
+        </button>
+      </div>
+    </div>
+    <div class="card-body">
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            @for(col of employeesTableColumns; track col){
+              <th>{{col}}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+
+          @for(emp of employees; track emp.id; let i = $index){
+            <tr>
+              <td>{{emp.name}}</td>
+              <td>{{emp.positionName}}</td>
+              <td>{{emp.birthdate | date:'dd/MM/yyyy'}}</td>
+              <td>
+                @if(emp.status){
+                  <span class="badge rounded-pill text-bg-success">Active</span>
+                }
+                @else {
+                  <span class="badge rounded-pill text-bg-danger">Inactive</span>
+                }
+              </td>
+              <td>{{emp.email}}</td>
+              <td>{{emp.salary | currency:'USD'}}</td>
+              <td>{{emp.departmentName}}</td>
+              <td>{{emp.managerName}}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
 </div>
