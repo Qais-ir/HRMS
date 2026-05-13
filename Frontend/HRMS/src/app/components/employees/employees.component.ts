@@ -1,12 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Employee } from '../../interfaces/employee.interface';
+import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 @Component({
   selector: 'app-employees',
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './employees.component.html',
   styleUrl: './employees.component.css'
 })
 export class EmployeesComponent {
+
+  @ViewChild ('closeModal') closeModal : ElementRef | undefined; // getElementById | JS
 
   employees : Employee[] = [
     { id: 1, name: "Emp 1", birthdate: new Date(2000,1,1), email: 'Emp1@gmail.com', salary: 1000, status: false,
@@ -43,22 +47,74 @@ export class EmployeesComponent {
     "Manager"
   ];
 
+  departments = [
+    {id: null, name :"Select Department"},
+    {id: 1, name : "Development"},
+    {id: 2, name : "Human Resources"},
+  ];
+
+  positions = [
+    {id: null, name: "Select Position"},
+    {id: 1, name : "Developer"},
+    {id: 2, name : "Hr"},
+    {id: 3, name : "Manager"}
+  ];
+
+  managers = [
+    {id: null, name: "Select Manager"},
+    {id: 1, name: "Emp 1"},
+    {id: 2, name: "Emp 2"}
+  ];
+
+
+  employeeForm : FormGroup = new FormGroup({
+    id: new FormControl(null),
+    firstName: new FormControl(null, [Validators.required]),
+    lastName: new FormControl(null, [Validators.required]),
+    birthdate: new FormControl(null, [Validators.required]),
+    email: new FormControl(null, [Validators.required]),
+    salary: new FormControl(null),
+    phone: new FormControl(null, [Validators.required]),
+    startDate: new FormControl(null, [Validators.required]),
+    endDate: new FormControl(null),
+    departmentId: new FormControl(null),
+    positionId: new FormControl(null),
+    managerId: new FormControl(null),
+    status: new FormControl(false, [Validators.required]),
+  });
+
+
+  saveEmployee(){
+
+    let emp : Employee = {
+      id: (this.employees[this.employees.length - 1]?.id ?? 0) + 1,
+      name: this.employeeForm.value.firstName + " " + this.employeeForm.value.lastName,
+      email: this.employeeForm.value.email,
+      birthdate: this.employeeForm.value.birthdate,
+      salary: this.employeeForm.value.salary,
+      phone: this.employeeForm.value.phone,
+      startDate: this.employeeForm.value.startDate,
+      endDate: this.employeeForm.value.endDate,
+      departmentId: this.employeeForm.value.departmentId,
+      departmentName: this.departments.find(x => x.id == this.employeeForm.value.departmentId)?.name,
+      positionId: this.employeeForm.value.positionId,
+      positionName: this.positions.find(x => x.id == this.employeeForm.value.positionId)?.name,
+      managerId: this.employeeForm.value.managerId,
+      managerName: this.managers.find(x => x.id == this.employeeForm.value.managerId)?.name,
+      status: this.employeeForm.value.status
+    }
+
+    this.employees.push(emp);
+
+    // Close Modal
+    this.closeModal?.nativeElement.click();
+  }
+
+  resetEmployeeForm(){
+    this.employeeForm.reset({
+      status: false
+    });
+  }
 }
 
-export interface Employee{
-  id: number;
-  name: string;
-  positionId: number;
-  positionName: string;
-  birthdate?: Date;
-  status: boolean;
-  startDate?: Date;
-  phone?: string;
-  managerId?: number | null; // number | undefined | null
-  managerName?: string | null;
-  departmentId?: number;
-  departmentName?: string;
-  salary?: number;
-  email?: string;
-  userId?: number;
-}
+
