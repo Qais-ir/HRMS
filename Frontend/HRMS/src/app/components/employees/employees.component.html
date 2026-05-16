@@ -62,7 +62,7 @@
         </thead>
         <tbody>
 
-          @for(emp of employees; track emp.id; let i = $index){
+          @for(emp of employees | paginate: pagiantionConfig ; track emp.id; let i = $index){
             <tr>
               <td>{{emp.name}}</td>
               <td>{{emp.positionName}}</td>
@@ -79,11 +79,22 @@
               <td>{{emp.salary | currency:'USD'}}</td>
               <td>{{emp.departmentName}}</td>
               <td>{{emp.managerName}}</td>
+              <td>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#saveEmployeeModal" (click)="loadEmployeeForm(emp.id)">
+                    <i class="bi bi-pencil-fill"></i>
+                </button>
+
+                <button type="button" class="btn btn-outline-danger mx-3" (click)="showConfirmationDialog(emp.id)"> 
+                    <i class="bi bi-trash-fill"></i>
+                </button>
+              </td>
             </tr>
           }
         </tbody>
       </table>
 
+      <!-- Child Compomnent -->
+      <pagination-controls class="text-end mt-2" (pageChange)="changePage($event)"></pagination-controls>
     </div>
   </div>
 
@@ -197,3 +208,8 @@
     </div>
   </div>
 </div>
+
+@if(showConfirmDialog){
+  <app-confirmation-dialog [title]="deleteDialogTitle"
+    [body]="deleteDialogBody" (confirm)="confirmEmployeeDelete($event)"></app-confirmation-dialog>
+}
