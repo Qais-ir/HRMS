@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HRMS.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")] // api/Departments
     [ApiController]
     public class DepartmentsController : ControllerBase
@@ -84,7 +84,7 @@ namespace HRMS.Controllers
 
         }
 
-        [Authorize(Roles = "Admin,HR")] // 403
+       // [Authorize(Roles = "Admin,HR")] // 403
         [HttpPost]
         public IActionResult Add([FromBody] SaveDepartmentDto departmentDto)
         {
@@ -111,7 +111,7 @@ namespace HRMS.Controllers
 
         }
 
-        [Authorize(Roles = "Admin,HR")]
+       // [Authorize(Roles = "Admin,HR")]
         [HttpPut]
         public IActionResult Update([FromBody] SaveDepartmentDto departmentDto)
         {
@@ -141,7 +141,7 @@ namespace HRMS.Controllers
 
         }
 
-        [Authorize(Roles = "Admin,HR")]
+      //  [Authorize(Roles = "Admin,HR")]
         [HttpDelete("{id}")]
         public IActionResult Delete(long id)
         {
@@ -169,6 +169,24 @@ namespace HRMS.Controllers
                 return StatusCode(500, ex.Message);
             }
 
+        }
+
+        [HttpGet("GetList")]
+        public IActionResult GetList()
+        {
+            try
+            {
+                var data = _dbContext.Departments.Select(x => new {
+                    Id = x.Id,
+                    Name = x.Name
+                });
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

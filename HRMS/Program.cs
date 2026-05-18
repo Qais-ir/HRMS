@@ -39,6 +39,18 @@ namespace HRMS
 
             builder.Services.AddDbContext<HRMSContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("HRMSContext")));
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngular", builder =>
+                {
+                    //builder.AllowAnyOrigin()
+                    builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+                });
+            });
+
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -56,9 +68,9 @@ namespace HRMS
             app.UseAuthentication(); // Middleware
             app.UseAuthorization(); // Middleware
 
+            app.UseCors("AllowAngular");// Middleware
 
             app.MapControllers();
-
             app.Run();
         }
     }

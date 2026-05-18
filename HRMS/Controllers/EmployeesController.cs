@@ -10,7 +10,7 @@ using System.Security.Claims;
 namespace HRMS.Controllers
 {
     // Data Annotations
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")] // api/Employees
     [ApiController]
     public class EmployeesController : ControllerBase
@@ -66,13 +66,17 @@ namespace HRMS.Controllers
                                DepartmentName = department.Name,
                                ManagerId = employee.ManagerId,
                                ManagerName = manager.FirstName,
-                               UserId = employee.UserId
+                               UserId = employee.UserId,
+                               Salary = employee.Salary,
+                               Email = employee.Email,
+                               IsActive = employee.IsActive
+
                            };
 
-                if (role?.ToUpper() != "ADMIN" && role?.ToUpper() != "HR")
-                {
-                    data = data.Where(x => x.UserId == long.Parse(userId));
-                }
+                //if (role?.ToUpper() != "ADMIN" && role?.ToUpper() != "HR")
+                //{
+                //    data = data.Where(x => x.UserId == long.Parse(userId));
+                //}
 
                 return Ok(data);
                 //return StatusCode(200, new { Name = "Ahmad", Position = "Developer" });        
@@ -151,7 +155,7 @@ namespace HRMS.Controllers
         // Select --> Projection
         // Lazy Loading --> ??
 
-        [Authorize(Roles = "Admin,HR")] // 403
+        //[Authorize(Roles = "Admin,HR")] // 403
         [HttpPost] // Create
         public IActionResult Add([FromBody] SaveEmployeeDto employee)
         {
@@ -208,7 +212,7 @@ namespace HRMS.Controllers
         }
 
         // [HttpPatch] // Update Only Specific Values
-        [Authorize(Roles = "Admin,HR")]
+        //[Authorize(Roles = "Admin,HR")]
         [HttpPut] // Update All Values
         public IActionResult Update([FromBody] SaveEmployeeDto employeeDto)
         {
@@ -245,7 +249,7 @@ namespace HRMS.Controllers
            
         }
 
-        [Authorize(Roles = "Admin,HR")]
+       // [Authorize(Roles = "Admin,HR")]
         [HttpDelete("{id}")] // Delete
         public IActionResult Delete(long id)
         {

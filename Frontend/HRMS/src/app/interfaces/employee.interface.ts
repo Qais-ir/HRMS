@@ -3,8 +3,8 @@ export interface Employee{
   name: string;
   positionId?: number;
   positionName?: string;
-  birthdate?: Date;
-  status: boolean;
+  birthDate?: Date;
+  isActive: boolean;
   startDate?: Date;
   endDate?: Date;
   phone?: string;

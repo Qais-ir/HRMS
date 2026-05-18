@@ -30,7 +30,7 @@
       </div>
 
       <div class="text-end mt-3">
-        <button type="button" class="btn btn-outline-secondary">
+        <button type="button" class="btn btn-outline-secondary" (click)="loadEmployees()">
           <i class="bi bi-search"></i>
           Search
         </button>
@@ -44,7 +44,7 @@
       <h5>Employees</h5>
 
       <div>
-        <button type="button" class="btn btn-outline-secondary" (click)="resetEmployeeForm()" data-bs-toggle="modal" data-bs-target="#saveEmployeeModal">
+        <button type="button" class="btn btn-outline-secondary" (click)="loadSaveDialog()" data-bs-toggle="modal" data-bs-target="#saveEmployeeModal">
           <i class="bi bi-person-fill-add"></i>
           Add
         </button>
@@ -66,9 +66,9 @@
             <tr>
               <td>{{emp.name}}</td>
               <td>{{emp.positionName}}</td>
-              <td>{{emp.birthdate | date:'dd/MM/yyyy'}}</td>
+              <td>{{emp.birthDate | date:'dd/MM/yyyy'}}</td>
               <td>
-                @if(emp.status){
+                @if(emp.isActive){
                   <span class="badge rounded-pill text-bg-success">Active</span>
                 }
                 @else {
@@ -127,7 +127,7 @@
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="birthdate" class="form-lable">Birthdate</label>
               <input type="date" class="form-control" id="birthdate" [class.invalid-input]="employeeForm.get('birthdate')?.invalid && employeeForm.get('birthdate')?.touched"
-               formControlName="birthdate" placeholder="Birthdate">
+               formControlName="birthDate" placeholder="Birthdate">
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
@@ -190,7 +190,7 @@
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
                 <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="status" formControlName="status" checked>
+                  <input class="form-check-input" type="checkbox" role="switch" id="status" formControlName="isActive" checked>
                   <label class="form-check-label" for="status">Status</label>
                 </div>
             </div>

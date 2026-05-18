@@ -17,5 +17,8 @@
         public long? PositionId { get; set; }
         public string? PositionName { get; set; }
         public long? UserId { get; set; }
+        public string Email { get; set; }
+        public bool IsActive { get; set; }
+
     }
 }
