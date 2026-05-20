@@ -7,6 +7,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { ConfirmationDialogComponent } from '../../shared-components/confirmation-dialog/confirmation-dialog.component';
 import { EmployeesService } from '../../services/employees.service';
 import { DepartmentsService } from '../../services/departments.service';
+import { List } from '../../interfaces/list.interface';
+import { LookupsService } from '../../services/lookups.service';
+import { MajorCodes } from '../../enums/shared-enums';
 @Component({
   selector: 'app-employees',
   imports: [CommonModule, ReactiveFormsModule, NgxPaginationModule, ConfirmationDialogComponent],
@@ -18,7 +21,8 @@ export class EmployeesComponent {
 
   constructor(private _datepipe: DatePipe,
     private _employeeService : EmployeesService,
-    private _departmentService : DepartmentsService
+    private _departmentService : DepartmentsService,
+    private _lookupService : LookupsService
   ) {
 
   }
@@ -45,20 +49,11 @@ export class EmployeesComponent {
     ""
   ];
 
-  departments : any[] = [];
+  departments : List[] = [];
 
-  positions = [
-    { id: null, name: "Select Position" },
-    { id: 1, name: "Developer" },
-    { id: 2, name: "Hr" },
-    { id: 3, name: "Manager" }
-  ];
+  positions : List[] = [];
 
-  managers = [
-    { id: null, name: "Select Manager" },
-    { id: 1, name: "Emp 1" },
-    { id: 2, name: "Emp 2" }
-  ];
+  managers : List[] = [];
 
 
   employeeForm: FormGroup = new FormGroup({
@@ -133,11 +128,53 @@ export class EmployeesComponent {
     })
   }
 
+  loadManagersList(employeeId?: number){
+
+    this.managers = [
+      {id : null, name: "Select Manager"}
+    ];
+
+    this._employeeService.getManagers(employeeId).subscribe({
+      next : (x : any) => {
+        if(x?.length > 0){
+          x.forEach( (z : any) => {
+            let manager = {id: z.id, name: z.name};
+            this.managers.push(manager);
+          })
+        }
+      },
+      error: err => { // Request Fail
+        console.log(err.error?.message ?? err?.message ?? "Http Response Error");
+      }
+    })
+  }
+
+  loadPositionsList(){
+    this.positions = [
+      {id: null, name : "Select Position"}
+    ];
+
+    this._lookupService.getByMajorCode(MajorCodes.EmployeePositions).subscribe({
+      next : (x : any) => {
+
+        if(x?.length > 0){
+          x?.forEach( (z : any) =>{
+            let position = {id : z.id, name : z.name};
+            this.positions.push(position);
+          });
+        }
+      },
+      error: err => { // Request Fail
+        console.log(err.error?.message ?? err?.message ?? "Http Response Error");
+      }
+    })
+  }
+
   saveEmployee() {
-    if (!this.employeeForm.value.id) { // Add Employee
-      let emp: Employee = {
-        id: (this.employees[this.employees.length - 1]?.id ?? 0) + 1,
-        name: this.employeeForm.value.firstName + " " + this.employeeForm.value.lastName,
+    let emp: Employee = {
+        id: this.employeeForm.value.id ?? 0,
+        firstName: this.employeeForm.value.firstName,
+        lastName: this.employeeForm.value.lastName,
         email: this.employeeForm.value.email,
         birthDate: this.employeeForm.value.birthDate,
         salary: this.employeeForm.value.salary,
@@ -145,48 +182,46 @@ export class EmployeesComponent {
         startDate: this.employeeForm.value.startDate,
         endDate: this.employeeForm.value.endDate,
         departmentId: this.employeeForm.value.departmentId,
-        departmentName: this.departments.find(x => x.id == this.employeeForm.value.departmentId)?.name,
         positionId: this.employeeForm.value.positionId,
-        positionName: this.positions.find(x => x.id == this.employeeForm.value.positionId)?.name,
         managerId: this.employeeForm.value.managerId,
-        managerName: this.managers.find(x => x.id == this.employeeForm.value.managerId)?.name,
         isActive: this.employeeForm.value.isActive
-      }
+      };
 
-      this.employees.push(emp);
+    if (!this.employeeForm.value.id) { // Add Employee
+      this._employeeService.add(emp).subscribe({
+        next: (x : any) =>{
+          this.loadEmployees();
+          // Close Modal
+          this.closeModal?.nativeElement.click();
+        },
+        error: err => { // Request Fail
+          alert(err.error?.message ?? err?.message ?? "Http Response Error");
+        }
+      });
 
-      // Close Modal
-      this.closeModal?.nativeElement.click();
     }
     else{ // Update Employee
+       this._employeeService.update(emp).subscribe({
+        next: (x : any) =>{
+          this.loadEmployees();
+          // Close Modal
+          this.closeModal?.nativeElement.click();
+        },
+        error: err => { // Request Fail
+          alert(err.error?.message ?? err?.message ?? "Http Response Error");
+        }
+      });
 
-      let index = this.employees.findIndex(x => x.id == this.employeeForm.value.id); // Returns The Index
-
-      this.employees[index].name = this.employeeForm.value.firstName + " " + this.employeeForm.value.lastName;
-      this.employees[index].email = this.employeeForm.value.email;
-      this.employees[index].birthDate = this.employeeForm.value.birthDate;
-      this.employees[index].salary = this.employeeForm.value.salary;
-      this.employees[index].phone = this.employeeForm.value.phone;
-      this.employees[index].startDate = this.employeeForm.value.startDate;
-      this.employees[index].endDate = this.employeeForm.value.endDate;
-      this.employees[index].departmentId = this.employeeForm.value.departmentId;
-      this.employees[index].departmentName = this.departments.find(x => x.id == this.employeeForm.value.departmentId)?.name;
-      this.employees[index].positionId = this.employeeForm.value.positionId;
-      this.employees[index].positionName = this.positions.find(x => x.id == this.employeeForm.value.positionId)?.name;
-      this.employees[index].managerId = this.employeeForm.value.managerId;
-      this.employees[index].managerName = this.managers.find(x => x.id == this.employeeForm.value.managerId)?.name;
-      this.employees[index].isActive = this.employeeForm.value.isActive;
-
-      // Close Modal
-      this.closeModal?.nativeElement.click();
     }
 
 
   }
 
-  loadSaveDialog(){
+  loadSaveDialog(id?: number){
     this.resetEmployeeForm();
     this.loadDepartmentList();
+    this.loadManagersList(id);
+    this.loadPositionsList();
   }
 
   resetEmployeeForm() {
@@ -197,26 +232,33 @@ export class EmployeesComponent {
 
   loadEmployeeForm(id: number) {
 
-    let employee = this.employees.find(x => x.id == id);
+    this.loadSaveDialog(id);
 
-    if (employee != null) {
+    this._employeeService.getById(id).subscribe({
+      next : (employee : any) => {
+        if(employee != null){
+          this.employeeForm.patchValue({
+            id: employee.id,
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            email: employee.email,
+            birthDate: this._datepipe.transform(employee.birthDate, 'yyyy-MM-dd'), // 'yyyy-MM-dd'
+            salary: employee.salary,
+            isActive: employee.isActive,
+            startDate: this._datepipe.transform(employee.startDate, 'yyyy-MM-dd'),
+            endDate: this._datepipe.transform(employee.endDate, 'yyyy-MM-dd'),
+            positionId: employee.positionId,
+            departmentId: employee.departmentId,
+            managerId: employee.managerId,
+            phone: employee.phone
+          });
+        }
+      },
+      error: err => { // Request Fail
+        console.log(err.error?.message ?? err?.message ?? "Http Response Error");
+      }
+    })
 
-      this.employeeForm.patchValue({
-        id: employee.id,
-        firstName: employee.name,
-        lastName: "",
-        email: employee.email,
-        birthdate: this._datepipe.transform(employee.birthDate, 'yyyy-MM-dd'), // 'yyyy-MM-dd'
-        salary: employee.salary,
-        isActive: employee.isActive,
-        startDate: this._datepipe.transform(employee.startDate, 'yyyy-MM-dd'),
-        endDate: this._datepipe.transform(employee.endDate, 'yyyy-MM-dd'),
-        positionId: employee.positionId,
-        departmentId: employee.departmentId,
-        managerId: employee.managerId,
-        phone: employee.phone
-      });
-    }
   }
 
   removeEmployee(id ?: number | null){

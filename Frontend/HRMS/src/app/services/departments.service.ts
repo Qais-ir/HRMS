@@ -6,9 +6,11 @@ import { Injectable } from '@angular/core';
 })
 export class DepartmentsService {
 
+  apiUrl : string = "https://localhost:7252/api/Departments";
+
   constructor(private _http : HttpClient) { }
 
   getList(){
-    return this._http.get("https://localhost:7252/api/Departments/GetList")
+    return this._http.get(this.apiUrl + "/GetList")
   }
 }

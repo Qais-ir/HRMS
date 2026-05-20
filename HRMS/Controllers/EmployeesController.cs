@@ -1,5 +1,7 @@
 ﻿using HRMS.DbContexts;
 using HRMS.Dtos.Employee;
+using HRMS.Dtos.Shared;
+using HRMS.Enums;
 using HRMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -122,7 +124,6 @@ namespace HRMS.Controllers
                 {
                     Id = employee.Id,
                     Name = employee.FirstName + " " + employee.LastName,
-                    //Position = employee.Position,
                     BirthDate = employee.BirthDate,
                     StartDate = employee.StartDate,
                     EndDate = employee.EndDate,
@@ -131,7 +132,15 @@ namespace HRMS.Controllers
                     ManagerId = employee.ManagerId,
                     ManagerName = employee.Manager.FirstName,
                     PositionId = employee.PositionId,
-                    PositionName = employee.Lookup.Name
+                    PositionName = employee.Lookup.Name,
+
+                    FirstName = employee.FirstName,
+                    LastName = employee.LastName,
+                    UserId = employee.UserId,
+                    Salary = employee.Salary,
+                    Email = employee.Email,
+                    IsActive = employee.IsActive,
+                    Phone = employee.Phone
                 }).FirstOrDefault(x => x.Id == id);
 
                 //var data = _dbContext.Employees.Include(x => x.Department).Include(x => x.Manager).FirstOrDefault(x => x.Id == id);
@@ -272,8 +281,31 @@ namespace HRMS.Controllers
             }
 
         }
+
+        [HttpGet("GetManagers")]
+        public IActionResult GetManagers([FromQuery] long? employeeId)
+        {
+            var data = from emp in _dbContext.Employees
+                       from pos in _dbContext.Lookups.Where(x => x.Id == emp.PositionId)
+                       where emp.IsActive && emp.Id != employeeId &&
+                       pos.MajorCode == (int)LookupMajorCodes.EmployeePositions && 
+                       pos.MinorCode == (int)PositionsMinorCodes.Manager
+                       select new ListDto
+                       {
+                           Id = emp.Id,
+                           Name = emp.FirstName + " " + emp.LastName
+                       };
+
+            return Ok(data);
+
+        }
     }
    
+
+    // Enum
+
+    //LookupsMajorCodes
+
 }
 
 

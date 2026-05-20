@@ -1,5 +1,6 @@
 ﻿using HRMS.DbContexts;
 using HRMS.Dtos.Department;
+using HRMS.Dtos.Shared;
 using HRMS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -176,7 +177,8 @@ namespace HRMS.Controllers
         {
             try
             {
-                var data = _dbContext.Departments.Select(x => new {
+                var data = _dbContext.Departments.Select(x => new ListDto
+                {
                     Id = x.Id,
                     Name = x.Name
                 });
