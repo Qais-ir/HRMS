@@ -24,7 +24,17 @@ export class EmployeesComponent {
     private _departmentService : DepartmentsService,
     private _lookupService : LookupsService
   ) {
+    
+  }
 
+  
+  ngOnInit(){  
+    this.loadPositionsList();
+    this.loadEmployees();
+  }
+
+  ngOnDestroy(){
+    debugger;
   }
 
   @ViewChild('closeModal') closeModal: ElementRef | undefined; // getElementById | JS
@@ -38,6 +48,7 @@ export class EmployeesComponent {
   employees: Employee[] = [];
 
   employeesTableColumns: string[] = [
+    "Image",
     "Name",
     "Position",
     "Birthdate",
@@ -55,6 +66,12 @@ export class EmployeesComponent {
 
   managers : List[] = [];
 
+  employeeStatus = [
+    {value: null, name: "Select Status"},
+    {value: true, name: "Active"},
+    {value: false, name: "Inactive"}
+  ]
+
 
   employeeForm: FormGroup = new FormGroup({
     id: new FormControl(null),
@@ -70,12 +87,32 @@ export class EmployeesComponent {
     positionId: new FormControl(null),
     managerId: new FormControl(null),
     isActive: new FormControl(false, [Validators.required]),
+    image: new FormControl(null)
   });
+
+  searchFilterForm: FormGroup = new FormGroup({
+    name: new FormControl(null),
+    positionId: new FormControl(null),
+    status: new FormControl(null)
+  });
+
+
+  imageUpload(event : any){
+    this.employeeForm.patchValue({
+      image: event.target.files[0]
+    })
+  }
 
   loadEmployees(){
     this.employees = [];
 
-   this._employeeService.getByCriteria().subscribe(
+    let searchObj = {
+      name: this.searchFilterForm.value.name,
+      positionId: this.searchFilterForm.value.positionId,
+      status: this.searchFilterForm.value.status
+    };
+
+   this._employeeService.getByCriteria(searchObj).subscribe(
     {
       next: (x : any) => { // Successful
         if(x?.length > 0){
@@ -184,7 +221,8 @@ export class EmployeesComponent {
         departmentId: this.employeeForm.value.departmentId,
         positionId: this.employeeForm.value.positionId,
         managerId: this.employeeForm.value.managerId,
-        isActive: this.employeeForm.value.isActive
+        isActive: this.employeeForm.value.isActive,
+        image: this.employeeForm.value.image
       };
 
     if (!this.employeeForm.value.id) { // Add Employee
@@ -265,9 +303,17 @@ export class EmployeesComponent {
     if(!id){
       return;
     }
+    this._employeeService.delete(id).subscribe({
+      next : res => {
+        this.loadEmployees();
+      },
+       error: err => { // Request Fail
+        alert(err.error?.message ?? err?.message ?? "Http Response Error");
+      }
+    })
 
-    let index = this.employees.findIndex(x => x.id == id); // Returns Employee Index
-    this.employees.splice(index, 1); // delete employee with splice | where start from index and finsih after one index
+    // let index = this.employees.findIndex(x => x.id == id); // Returns Employee Index
+    // this.employees.splice(index, 1); // delete employee with splice | where start from index and finsih after one index
   }
 
   showConfirmationDialog(empId : number){

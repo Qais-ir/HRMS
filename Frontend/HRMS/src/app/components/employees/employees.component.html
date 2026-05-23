@@ -9,28 +9,37 @@
     </div>
     <div class="card-body">
 
-      <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-12">
-          <label for="employeeName" class="form-label">Employee Name</label>
-          <input type="text" class="form-control" id="employeeName"
-            placeholder="Name">
-        </div>
+      <form [formGroup]="searchFilterForm">
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-12">
+            <label for="employeeName" class="form-label">Employee Name</label>
+            <input type="text" class="form-control" id="employeeName" formControlName="name"
+              placeholder="Name">
+          </div>
 
-        <div class="col-lg-4 col-md-4 col-sm-12">
-          <label for="position" class="form-label">Position</label>
-          <input type="text" class="form-control" id="position"
-            placeholder="Position">
-        </div>
+          <div class="col-lg-4 col-md-4 col-sm-12">
+            <label for="position" class="form-label">Position</label>
+            <select class="form-select" id="position" formControlName="positionId">
+              @for(item of positions; track item.id){
+                <option [ngValue]="item.id">{{item.name}}</option>
+              }
+            </select>
+          </div>
 
-        <div class="col-lg-4 col-md-4 col-sm-12">
-          <label for="status" class="form-label">Status</label>
-          <input type="text" class="form-control" id="status"
-            placeholder="Status">
+          <div class="col-lg-4 col-md-4 col-sm-12">
+            <label for="status" class="form-label">Status</label>
+            <select class="form-select" id="status" formControlName="status">
+              @for(item of employeeStatus; track item.value){
+                <option [ngValue]="item.value">{{item.name}}</option>
+              }
+            </select>
+          </div>
         </div>
-      </div>
+      </form>
 
       <div class="text-end mt-3">
-        <button type="button" class="btn btn-outline-secondary" (click)="loadEmployees()">
+        <button type="button" class="btn btn-outline-secondary"
+          (click)="loadEmployees()">
           <i class="bi bi-search"></i>
           Search
         </button>
@@ -44,7 +53,9 @@
       <h5>Employees</h5>
 
       <div>
-        <button type="button" class="btn btn-outline-secondary" (click)="loadSaveDialog()" data-bs-toggle="modal" data-bs-target="#saveEmployeeModal">
+        <button type="button" class="btn btn-outline-secondary"
+          (click)="loadSaveDialog()" data-bs-toggle="modal"
+          data-bs-target="#saveEmployeeModal">
           <i class="bi bi-person-fill-add"></i>
           Add
         </button>
@@ -56,160 +67,189 @@
         <thead>
           <tr>
             @for(col of employeesTableColumns; track col){
-              <th>{{col}}</th>
+            <th>{{col}}</th>
             }
           </tr>
         </thead>
         <tbody>
 
-          @for(emp of employees | paginate: pagiantionConfig ; track emp.id; let i = $index){
-            <tr>
-              <td>{{emp.name}}</td>
-              <td>{{emp.positionName}}</td>
-              <td>{{emp.birthDate | date:'dd/MM/yyyy'}}</td>
-              <td>
-                @if(emp.isActive){
-                  <span class="badge rounded-pill text-bg-success">Active</span>
-                }
-                @else {
-                  <span class="badge rounded-pill text-bg-danger">Inactive</span>
-                }
-              </td>
-              <td>{{emp.email}}</td>
-              <td>{{emp.salary | currency:'USD'}}</td>
-              <td>{{emp.departmentName}}</td>
-              <td>{{emp.managerName}}</td>
-              <td>
-                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#saveEmployeeModal" (click)="loadEmployeeForm(emp.id)">
-                    <i class="bi bi-pencil-fill"></i>
-                </button>
+          @for(emp of employees | paginate: pagiantionConfig ; track emp.id; let
+          i = $index){
+          <tr>
+            <td>
+              <img width="50" height="50" src="https://www.davd.photo/wp-content/uploads/2019/03/rocco-roxie-employee-headshots-4.jpg">
+            </td>
+            <td>{{emp.name}}</td>
+            <td>{{emp.positionName}}</td>
+            <td>{{emp.birthDate | date:'dd/MM/yyyy'}}</td>
+            <td>
+              @if(emp.isActive){
+              <span class="badge rounded-pill text-bg-success">Active</span>
+              }
+              @else {
+              <span class="badge rounded-pill text-bg-danger">Inactive</span>
+              }
+            </td>
+            <td>{{emp.email}}</td>
+            <td>{{emp.salary | currency:'USD'}}</td>
+            <td>{{emp.departmentName}}</td>
+            <td>{{emp.managerName}}</td>
+            <td>
+              <button type="button" class="btn btn-outline-success"
+                data-bs-toggle="modal" data-bs-target="#saveEmployeeModal"
+                (click)="loadEmployeeForm(emp.id)">
+                <i class="bi bi-pencil-fill"></i>
+              </button>
 
-                <button type="button" class="btn btn-outline-danger mx-3" (click)="showConfirmationDialog(emp.id)"> 
-                    <i class="bi bi-trash-fill"></i>
-                </button>
-              </td>
-            </tr>
+              <button type="button" class="btn btn-outline-danger mx-3"
+                (click)="showConfirmationDialog(emp.id)">
+                <i class="bi bi-trash-fill"></i>
+              </button>
+            </td>
+          </tr>
           }
         </tbody>
       </table>
 
       <!-- Child Compomnent -->
-      <pagination-controls class="text-end mt-2" (pageChange)="changePage($event)"></pagination-controls>
+      <pagination-controls class="text-end mt-2"
+        (pageChange)="changePage($event)"></pagination-controls>
     </div>
   </div>
 
 </div>
 
-<div class="modal modal-lg fade" id="saveEmployeeModal" tabindex="-1" aria-labelledby="saveEmployeeModal" aria-hidden="true">
+<div class="modal modal-lg fade" id="saveEmployeeModal" tabindex="-1"
+  aria-labelledby="saveEmployeeModal" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">Save Employee</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+          aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        
+
         <form [formGroup]="employeeForm">
           <div class="row align-end">
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="firstName" class="form-lable">First Name</label>
-              <input type="text" class="form-control" id="firstName" [class.invalid-input]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched"
-               formControlName="firstName" placeholder="Employee First Name">
+              <input type="text" class="form-control" id="firstName"
+                [class.invalid-input]="employeeForm.get('firstName')?.invalid && employeeForm.get('firstName')?.touched"
+                formControlName="firstName" placeholder="Employee First Name">
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="lastName" class="form-lable">Last Name</label>
-              <input type="text" class="form-control" id="lastName"  [class.invalid-input]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched"
-               formControlName="lastName" placeholder="Employee Last Name">
+              <input type="text" class="form-control" id="lastName"
+                [class.invalid-input]="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched"
+                formControlName="lastName" placeholder="Employee Last Name">
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="birthdate" class="form-lable">Birthdate</label>
-              <input type="date" class="form-control" id="birthdate" [class.invalid-input]="employeeForm.get('birthdate')?.invalid && employeeForm.get('birthdate')?.touched"
-               formControlName="birthDate" placeholder="Birthdate">
+              <input type="date" class="form-control" id="birthdate"
+                [class.invalid-input]="employeeForm.get('birthdate')?.invalid && employeeForm.get('birthdate')?.touched"
+                formControlName="birthDate" placeholder="Birthdate">
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="email" class="form-lable">Email</label>
-              <input type="email" class="form-control" id="email"  [class.invalid-input]="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched"
-               formControlName="email" placeholder="Email">
+              <input type="email" class="form-control" id="email"
+                [class.invalid-input]="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched"
+                formControlName="email" placeholder="Email">
             </div>
-           
+
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="salary" class="form-lable">Salary</label>
-              <input type="number" class="form-control" id="salary" formControlName="salary" placeholder="Salary">
+              <input type="number" class="form-control" id="salary"
+                formControlName="salary" placeholder="Salary">
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="phone" class="form-lable">Phone</label>
-              <input type="text" class="form-control" id="phone"  [class.invalid-input]="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched"
-               formControlName="phone" placeholder="Phone">
+              <input type="text" class="form-control" id="phone"
+                [class.invalid-input]="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched"
+                formControlName="phone" placeholder="Phone">
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="startDate" class="form-lable">Start Date</label>
-              <input type="date" class="form-control" id="startDate" [class.invalid-input]="employeeForm.get('startDate')?.invalid && employeeForm.get('startDate')?.touched"
-               formControlName="startDate" placeholder="Start Date">
+              <input type="date" class="form-control" id="startDate"
+                [class.invalid-input]="employeeForm.get('startDate')?.invalid && employeeForm.get('startDate')?.touched"
+                formControlName="startDate" placeholder="Start Date">
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="endDate" class="form-lable">End Date</label>
-              <input type="date" class="form-control" id="endDate" formControlName="endDate" placeholder="End Date">
+              <input type="date" class="form-control" id="endDate"
+                formControlName="endDate" placeholder="End Date">
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="department" class="form-lable">Department</label>
-              <select id="department" class="form-select" formControlName="departmentId">
+              <select id="department" class="form-select"
+                formControlName="departmentId">
                 @for(item of departments; track item.id){
-                  <option [value]="item.id">{{item.name}}</option>
+                <option [ngValue]="item.id">{{item.name}}</option>
                 }
-                
+
               </select>
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
               <label for="position" class="form-lable">Position</label>
-              <select id="position" class="form-select" formControlName="positionId">
+              <select id="position" class="form-select"
+                formControlName="positionId">
                 @for(item of positions; track item.id){
-                  <option [value]="item.id">{{item.name}}</option>
+                <option [ngValue]="item.id">{{item.name}}</option>
                 }
-                
-              </select>
-            </div>
 
-           <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
-              <label for="manager" class="form-lable">Manager</label>
-              <select id="manager" class="form-select" formControlName="managerId">
-                @for(item of managers; track item.id){
-                  <option [value]="item.id">{{item.name}}</option>
-                }
-                
               </select>
             </div>
 
             <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" role="switch" id="status" formControlName="isActive" checked>
-                  <label class="form-check-label" for="status">Status</label>
-                </div>
+              <label for="manager" class="form-lable">Manager</label>
+              <select id="manager" class="form-select"
+                formControlName="managerId">
+                @for(item of managers; track item.id){
+                <option [ngValue]="item.id">{{item.name}}</option>
+                }
+
+              </select>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch"
+                  id="status" formControlName="isActive" checked>
+                <label class="form-check-label" for="status">Status</label>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-12 mb-2">
+                <label for="image" class="form-label">Image</label>
+                <input class="form-control form-control-sm" id="image" type="file" accept="image/*"
+                 (change)="imageUpload($event)">
             </div>
 
           </div>
 
-
-            
         </form>
       </div>
       <div class="modal-footer">
-        <button id="closeModal" #closeModal type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" (click)="saveEmployee()" [disabled]="employeeForm.invalid">Save changes</button>
+        <button id="closeModal" #closeModal type="button"
+          class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="saveEmployee()"
+          [disabled]="employeeForm.invalid">Save changes</button>
       </div>
     </div>
   </div>
 </div>
 
 @if(showConfirmDialog){
-  <app-confirmation-dialog [title]="deleteDialogTitle"
-    [body]="deleteDialogBody" (confirm)="confirmEmployeeDelete($event)"></app-confirmation-dialog>
+<app-confirmation-dialog [title]="deleteDialogTitle"
+  [body]="deleteDialogBody"
+  (confirm)="confirmEmployeeDelete($event)"></app-confirmation-dialog>
 }

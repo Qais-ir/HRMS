@@ -50,7 +50,9 @@ namespace HRMS.Controllers
                            from manager in _dbContext.Employees.Where(x => x.Id == employee.ManagerId).DefaultIfEmpty() // --> Left Join
                            from lookup in _dbContext.Lookups.Where(x => x.Id == employee.PositionId).DefaultIfEmpty()
                            where (employeeDto.PositionId == null || employee.PositionId == employeeDto.PositionId) &&
-                           (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper()))
+                           (employeeDto.Name == null || employee.FirstName.ToUpper().Contains(employeeDto.Name.ToUpper())) &&
+                           (employeeDto.Status == null || employee.IsActive == employeeDto.Status)
+
                            orderby employee.Id
                            select new EmployeeDto
                            {
@@ -268,6 +270,12 @@ namespace HRMS.Controllers
                 if (employee == null)
                 {
                     return NotFound("Employee Does Not Exist");
+                }
+
+                var employeeAssociate = _dbContext.Employees.Any(x => x.ManagerId == id);
+                if (employeeAssociate)
+                {
+                    return BadRequest(new Exception("Managers with assigned employees cannot be deleted."));
                 }
 
                 _dbContext.Employees.Remove(employee);

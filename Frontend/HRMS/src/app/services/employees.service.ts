@@ -11,10 +11,11 @@ export class EmployeesService {
 
   apiUrl : string = "https://localhost:7252/api/Employees";
 
-  public getByCriteria(){
+  public getByCriteria(searchObj: any){
     let params = new HttpParams();
-    params = params.set("Name", "");
-    params = params.set("PositionId", "");
+    params = params.set("Name", searchObj.name ?? "");
+    params = params.set("PositionId", searchObj.positionId ?? "");
+    params = params.set("Status", searchObj.status ?? "");
 
     return this._http.get(this.apiUrl + '/GetByCriteria', {params});
   }
@@ -36,5 +37,10 @@ export class EmployeesService {
 
   update(employee: Employee){
     return this._http.put(this.apiUrl, employee);
+  }
+
+  delete(id : number){
+    return this._http.delete(this.apiUrl + `/${id}`);
+
   }
 }
