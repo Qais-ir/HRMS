@@ -36,7 +36,23 @@ export class EmployeesService {
   }
 
   update(employee: Employee){
-    return this._http.put(this.apiUrl, employee);
+    let formData = new FormData();
+    formData.set("Id", employee.id?.toString())
+    formData.set("FirstName", employee.firstName?.toString() ?? "");
+    formData.set("LastName", employee.lastName?.toString() ?? "");
+    formData.set("BirthDate", employee.birthDate?.toString() ?? "");
+    formData.set("Email", employee.email?.toString() ?? "");
+    formData.set("IsActive", employee.isActive?.toString() ?? "");
+    formData.set("PositionId", employee.positionId?.toString() ?? "");
+    formData.set("DepartmentId", employee.departmentId?.toString() ?? "");
+    formData.set("ManagerId", employee.managerId?.toString() ?? "");
+    formData.set("Salary", employee.salary?.toString() ?? "");
+    formData.set("StartDate", employee.startDate?.toString() ?? "");
+    formData.set("EndDate", employee.endDate?.toString() ?? "");
+    formData.set("Phone", employee.phone?.toString() ?? "");
+    formData.set("Image", employee.image);
+
+    return this._http.put(this.apiUrl, formData);
   }
 
   delete(id : number){

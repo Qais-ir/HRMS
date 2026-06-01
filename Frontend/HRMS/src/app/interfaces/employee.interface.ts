@@ -18,4 +18,5 @@ export interface Employee{
   email?: string;
   userId?: number;
   image?: any;
+  imagePath?: string;
 }

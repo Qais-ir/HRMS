@@ -130,7 +130,8 @@ export class EmployeesComponent {
               departmentName: z.departmentName,
               managerId: z.managerId,
               managerName: z.managerName,
-              userId: z.userId
+              userId: z.userId,
+              imagePath: z.imagePath
             };
 
             this.employees.push(employee);

@@ -16,5 +16,6 @@
         public long? DepartmentId { get; set; }
         public long? ManagerId { get; set; }
         public long? PositionId { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }

@@ -70,6 +70,8 @@ namespace HRMS
 
             app.UseCors("AllowAngular");// Middleware
 
+            app.UseStaticFiles();
+
             app.MapControllers();
             app.Run();
         }

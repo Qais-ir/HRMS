@@ -19,10 +19,14 @@ namespace HRMS.Controllers
     {
 
         private readonly HRMSContext _dbContext;
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _config;
 
-        public EmployeesController(HRMSContext dbContext)
+        public EmployeesController(HRMSContext dbContext, IWebHostEnvironment env, IConfiguration config)
         {
             _dbContext = dbContext;
+            _env = env;
+            _config = config;
         }
 
         // Nuget Package : Library
@@ -73,8 +77,9 @@ namespace HRMS.Controllers
                                UserId = employee.UserId,
                                Salary = employee.Salary,
                                Email = employee.Email,
-                               IsActive = employee.IsActive
-
+                               IsActive = employee.IsActive,
+                               ImagePath = employee.ImagePath != null? Path.Combine(_config["BaseUrl"], employee.ImagePath) : null// https://localhost:7252/EmployeesImages/30dd879c-ee2f-11db-8314-0800200c9a66.jpg
+                               //"https://localhost:7252"
                            };
 
                 //if (role?.ToUpper() != "ADMIN" && role?.ToUpper() != "HR")
@@ -225,7 +230,7 @@ namespace HRMS.Controllers
         // [HttpPatch] // Update Only Specific Values
         //[Authorize(Roles = "Admin,HR")]
         [HttpPut] // Update All Values
-        public IActionResult Update([FromBody] SaveEmployeeDto employeeDto)
+        public IActionResult Update([FromForm] SaveEmployeeDto employeeDto)
         {
             try
             {
@@ -249,6 +254,12 @@ namespace HRMS.Controllers
                 employee.Salary = employeeDto.Salary;
                 employee.DepartmentId = employeeDto.DepartmentId;
                 employee.ManagerId = employeeDto.ManagerId;
+
+                if (employeeDto.Image != null) {
+                   
+                    employee.ImagePath = UploadImage(employeeDto.Image);
+
+                }
 
                 _dbContext.SaveChanges();
                 return Ok();
@@ -307,6 +318,34 @@ namespace HRMS.Controllers
             return Ok(data);
 
         }
+
+
+        private string UploadImage(IFormFile image)
+        {
+            var imagesPath = "EmployeesImages"; // EmployeesImages;
+            var rootPath = Path.Combine(_env.WebRootPath, imagesPath); // dynamic
+            //"E:\\HRMS\\HRMS\\wwwroot" Hard Coded
+
+            if (!Directory.Exists(rootPath))
+            {
+                // Create Folder If Not Exist
+                Directory.CreateDirectory(rootPath);
+            }
+
+            var fileExtension = Path.GetExtension(image.FileName); // .png, .jpg
+            var fileName = Guid.NewGuid() + fileExtension; // 30dd879c-ee2f-11db-8314-0800200c9a66.jpg
+
+            var filePath = Path.Combine(rootPath, fileName); // E:\\HRMS\\HRMS\\wwwroot\30dd879c-ee2f-11db-8314-0800200c9a66.jpg
+
+
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                image.CopyTo(stream);
+            }
+
+            return Path.Combine(imagesPath, fileName); // EmployeesImages/30dd879c-ee2f-11db-8314-0800200c9a66.jpg
+        } 
     }
    
 
